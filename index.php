@@ -1,44 +1,39 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<body>
 <?php
+/**
+ * Application entry point
+ *
+ * Example - run a particular store or website:
+ * --------------------------------------------
+ * require __DIR__ . '/app/bootstrap.php';
+ * $params = $_SERVER;
+ * $params[\Magento\Store\Model\StoreManager::PARAM_RUN_CODE] = 'website2';
+ * $params[\Magento\Store\Model\StoreManager::PARAM_RUN_TYPE] = 'website';
+ * $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $params);
+ * \/** @var \Magento\Framework\App\Http $app *\/
+ * $app = $bootstrap->createApplication(\Magento\Framework\App\Http::class);
+ * $bootstrap->run($app);
+ * --------------------------------------------
+ *
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
-$hostname = "localhost";
-$username = "root";
-$password = "Kodinar@123";
-$db = "magento";
-
-$dbconnect = mysqli_connect($hostname, $username, $password, $db);
-
-if ($dbconnect->connect_error) {
-	die("Database connection failed: " . $dbconnect->connect_error);
+try {
+    require __DIR__ . '/app/bootstrap.php';
+} catch (\Exception $e) {
+    echo <<<HTML
+<div style="font:12px/1.35em arial, helvetica, sans-serif;">
+    <div style="margin:0 0 25px 0; border-bottom:1px solid #ccc;">
+        <h3 style="margin:0;font-size:1.7em;font-weight:normal;text-transform:none;text-align:left;color:#2f2f2f;">
+        Autoload error</h3>
+    </div>
+    <p>{$e->getMessage()}</p>
+</div>
+HTML;
+    exit(1);
 }
 
-?>
-
-<table border="1" align="center">
-<tr>
-  <td>ID</td>
-  <td>Name</td>
-  <td>Email</td>
-</tr>
-
-<?php
-
-$query = mysqli_query($dbconnect, "SELECT * FROM user")
-or die(mysqli_error($dbconnect));
-
-while ($row = mysqli_fetch_array($query)) {
-	echo
-		"<tr>
-    <td>{$row['id']}</td>
-    <td>{$row['name']}</td>
-    <td>{$row['email']}</td>
-   </tr>\n";
-
-}
-
-?>
-</table>
-</body>
-</html>
+$bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $_SERVER);
+/** @var \Magento\Framework\App\Http $app */
+$app = $bootstrap->createApplication(\Magento\Framework\App\Http::class);
+$bootstrap->run($app);
