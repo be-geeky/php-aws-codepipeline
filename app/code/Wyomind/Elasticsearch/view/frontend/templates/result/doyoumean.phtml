@@ -1,0 +1,10 @@
+<?php
+if ($block->isElasticsearch()) :
+    $suggestion = $block->getSuggestion();
+    ?>
+
+    <?php if (!empty($suggestion)): ?>
+        <h2><em><?php echo __('Did you mean %1?', '<a href="' . $block->getQueryUrl($suggestion) . '">' . $suggestion . '</a>'); ?></em></h2>
+    <?php
+    endif;
+endif;

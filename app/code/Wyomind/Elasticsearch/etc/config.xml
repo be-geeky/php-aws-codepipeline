@@ -1,0 +1,626 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <elasticsearch>
+            <license>
+                <!--required for License Manager -->
+                <extension_label>Elasticsearch</extension_label>
+                <extension_version>6.1.2.7</extension_version>
+                <extension_code>els</extension_code>
+                <get_online_license>1</get_online_license>
+            <activation_key>Z57WEYD8SOF7VUWSI</activation_key></license>
+        </elasticsearch>
+        <catalog>
+            <search>
+                <elasticsearch>
+                    <enable_debug_mode>0</enable_debug_mode>
+                    <version>AUTO</version>
+                    <servers>127.0.0.1:9200</servers>
+                    <verify_host>1</verify_host>
+                    <timeout>5</timeout>
+                    <index_prefix/>
+                    <index_settings><![CDATA[{
+   "number_of_shards": 1,
+   "number_of_replicas": 0,
+   "analysis": {
+       "analyzer": {
+           "std": {
+               "tokenizer": "standard",
+               "char_filter": "html_strip",
+               "filter": ["standard", "elision", "asciifolding", "lowercase", "length"]
+           },
+           "keyword": {
+               "tokenizer": "keyword",
+               "filter": ["asciifolding", "lowercase"]
+           },
+           "keyword_prefix": {
+               "tokenizer": "keyword",
+               "filter": ["asciifolding", "lowercase", "edge_ngram_front"]
+           },
+           "text_prefix": {
+               "tokenizer": "standard",
+               "char_filter": "html_strip",
+               "filter": ["standard", "elision", "asciifolding", "lowercase", "edge_ngram_front"]
+           },
+           "text_suffix": {
+               "tokenizer": "standard",
+               "char_filter": "html_strip",
+               "filter": ["standard", "elision", "asciifolding", "lowercase", "edge_ngram_back"]
+           }
+       },
+       "filter": {
+           "edge_ngram_front": {
+               "type": "edgeNGram",
+               "min_gram": 1,
+               "max_gram": 20,
+               "side": "front"
+           },
+           "edge_ngram_back": {
+               "type": "edgeNGram",
+               "min_gram": 1,
+               "max_gram": 20,
+               "side": "back"
+           },
+           "length": {
+               "type": "length",
+               "min": 3
+           }
+       }
+   }
+}]]></index_settings>
+                    <safe_reindex>1</safe_reindex>
+                    <query_operator>AND</query_operator>
+                    <enable_fuzzy_query>1</enable_fuzzy_query>
+                    <fuzzy_query_mode>AUTO</fuzzy_query_mode>
+                    <enable_product_weight>0</enable_product_weight>
+                    <enable_pub_folder>0</enable_pub_folder>
+                </elasticsearch>
+            </search>
+        </catalog>
+        <elasticsearch>
+            <autocomplete>
+                <enable>1</enable>
+                <advanced>
+                    <css_rules><![CDATA[/******************************************************************************/
+/* Large screen size                                                         */
+/******************************************************************************/
+@media (min-width: 1000px) {
+  div#search_autocomplete:not(.auto-size) {
+    width: 900px!important;
+    left: -635px;
+    margin-top: 1px;
+    background: transparent;
+  }
+  div#search_autocomplete div.left {
+    width: 290px;
+    display: inline-block;
+    float: left;
+    margin:5px;
+  }
+  div#search_autocomplete div.left > div {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  div#search_autocomplete div.right {
+    width: 587px; /* -2 px because of the border */
+    display: inline-block;
+    margin:5px;
+  }
+  div#search_autocomplete div.sep {
+    float: left;
+    border-right: 1px solid #c2c2c2;
+    position: absolute;
+    left: 300px;
+    bottom: 5px;
+    top: 17px;
+    width: 1px;
+  }
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-suggests {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-products {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  div#search_autocomplete:not(.auto-size) ul.wyomind {
+    /*min-height:240px;*/
+    list-style-type: none;
+    padding-left: 0;
+    border-top: 1px solid #3399cc;
+    overflow:hidden;
+    background: white;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.products {
+    width:100%;
+  }
+  div#search_autocomplete ul.wyomind li.qs-option.product[role=option] {
+    display: block;
+    margin: 5px;
+    flex: 0 0 calc(50% - 10px); /* 2 columns */
+    padding: 5px;
+    border:none !important;
+    box-sizing: border-box;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.categories {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px !important;
+    bottom: 0px;
+    padding:0px;
+  }
+  div#search_autocomplete span.no-result {
+    padding:15px;
+    font-style:italic;
+    color: #c2c2c2;
+    display:block !important;
+  }
+
+  /* Ultimo support */
+  .central-column div#search_autocomplete:not(.auto-size) {
+    left: -75% !important;
+  }
+  .central-column div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  .header-top .central-column div#search_autocomplete:not(.auto-size) {
+    left: -170% !important;
+  }
+  .left-column div#search_autocomplete:not(.auto-size) {
+    left: 0px !important;
+  }
+  .left-column div#search_autocomplete:before {
+    margin-left: 25% !important;
+  }
+  .right-column div#search_autocomplete:not(.auto-size) {
+    right: 0px !important;
+    left:auto !important;
+  }
+  .right-column div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+  div#search_autocomplete {
+   	box-shadow: none; 
+  }
+
+}
+
+/******************************************************************************/
+/* Medium screen size                                                         */
+/******************************************************************************/
+@media (min-width: 768px) and (max-width: 999px) {
+  div#search_autocomplete:not(.auto-size) {
+    width: 600px!important;
+    left: -335px;
+    margin-top: 1px;
+    background: transparent;
+  }
+  div#search_autocomplete div.left {
+    width: 290px;
+    display: inline-block;
+    float: left;
+    margin:5px;
+  }
+  div#search_autocomplete div.left > div {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  div#search_autocomplete div.right {
+    width: 288px; /* -2 px because of the border */
+    display: inline-block;
+    margin:5px;
+  }
+  div#search_autocomplete div.sep {
+    float: left;
+    border-right: 1px solid #c2c2c2;
+    position: absolute;
+    left: 300px;
+    bottom: 5px;
+    top: 17px;
+    width: 1px;
+  }  
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-suggests {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-products {
+    margin-bottom: 20px;
+  }
+  div#search_autocomplete:not(.auto-size) ul.wyomind {
+    /*min-height:240px;*/
+    list-style-type: none;
+    padding-left: 0;
+    border-top: 1px solid #c2c2c2;
+    overflow:hidden;
+    background: white;
+  }
+  div#search_autocomplete ul.wyomind li.qs-option.product[role=option] {
+    display: block;
+    margin: 5px;
+    padding: 5px;
+    border:none !important;
+    box-sizing: border-box;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.categories {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px !important;
+    bottom: 0px;
+    padding:0px;
+  }
+  div#search_autocomplete span.no-result {
+    padding:15px;
+    font-style:italic;
+    color: #c2c2c2;
+    display:block !important;
+  }
+  div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+
+  
+
+  /* Ultimo support */
+  .central-column div#search_autocomplete:not(.auto-size) {
+    left: -75% !important;
+  }  
+  .central-column div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  .left-column div#search_autocomplete:not(.auto-size) {
+    left: 0px !important;
+  }
+  .left-column div#search_autocomplete:before {
+    margin-left: 25% !important;
+  }
+  .header-top .central-column div#search_autocomplete:not(.auto-size) {
+    left: -170% !important;
+  }
+  .right-column div#search_autocomplete:not(.auto-size) {
+    right: 0px !important;
+    left:auto !important;
+  }  
+  .right-column div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+  div#search_autocomplete {
+   	box-shadow: none; 
+  }
+}
+
+/******************************************************************************/
+/* Small screen size                                                         */
+/******************************************************************************/
+@media (max-width: 767px) {
+  div#search_autocomplete div.block-products.no-result,
+  div#search_autocomplete div.block-categories.no-result,
+  div#search_autocomplete div.block-cms.no-result {
+    display:none;
+  }
+  div#search_autocomplete {
+    background: transparent !important;
+    box-shadow: none;
+  }
+  div#search_autocomplete ul.wyomind {
+    display:table; 
+    width:99%;
+    background: white;
+  }
+  div#search_autocomplete div.right {
+    display:table-header-group; 
+  }
+  div#search_autocomplete div.block-products,
+  div#search_autocomplete div.block-suggests,
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 20px;
+  }
+  div#search_autocomplete span.all-results {
+    position:relative !important;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  
+}
+
+
+/******************************************************************************/
+/* All sizes                                                                  */
+/******************************************************************************/
+div#search_autocomplete ul.wyomind li.qs-section {
+  background: #006bb496;
+  text-transform: uppercase;
+  font-weight:bold;
+  color:white;
+}
+div#search_autocomplete ul li .amount {
+  color: white;
+}
+
+div#search_autocomplete span.no-result {
+  display:none;
+}
+div#search_autocomplete:not(.no-result) ul.wyomind li {
+  border: 0px;
+  padding-right:5px;
+}
+div#search_autocomplete ul.wyomind li img {
+  float: left;
+  margin-right: 6px;
+  background-color: #fff;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+div#search_autocomplete ul.wyomind li .qs-option-name {
+  vertical-align: top;
+}
+div#search_autocomplete ul.wyomind li .clearer {
+  clear: both;
+}
+div#search_autocomplete ul.wyomind li a:hover {
+  text-decoration: none;
+}
+div#search_autocomplete div.right span.category {
+  color:black;
+  display:block;
+  font-size:0.8em;
+}
+
+div#search_autocomplete p.old-price {
+  text-decoration: line-through;
+  float:left;
+  margin-right:10px;
+}
+div#search_autocomplete div.price-box {
+  font-size:0.9em;
+}
+div#search_autocomplete span.price-label {
+  color:black;
+}
+div#search_autocomplete p.price-from {
+  margin-bottom:0px;
+}
+div#search_autocomplete div.right span.name {
+  color:black;
+}
+div#search_autocomplete ul:not(:empty) {
+ border: 1px solid #3399cc !important; 
+}
+div#search_autocomplete:before {
+  content: '';
+  width: 0;
+  height: 5px;
+  display: block;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  border-bottom: 7px solid #3399cc;
+  background: transparent;
+  border-top: none;
+  margin-left: 85%;
+  top: -4px;
+}
+div#search_autocomplete:not(.no-result) ul.wyomind li.qs-option {
+    margin: 2px !important;
+}
+div#search_autocomplete span.all-results {
+  right: 10px;
+  margin-top: 10px;
+  bottom: 6px;
+  position: absolute;
+  float: right;
+}
+div#search_autocomplete li.qs-option span.count {
+  float:right;
+}]]></css_rules>
+                <js_template><![CDATA[<% if (products.count == 0 && categories.count == 0  && cms.count == 0 && suggests.count == 0) { %>
+  <li>
+    <span>No Result</span>
+  </li>
+<% } else if (products.count == 0 && categories.count == 0 && cms.count == 0 && suggests.enabled == 1 && suggests.count != 0) { %>
+  <li class="qs-section only-suggest">
+    <span class="qs-option-name">Do you mean?</span>
+  </li>
+  <% _.each(suggests.docs, function(doc) { %>
+    <li role="option" class="qs-option">
+      <a href="<%= _.getSearchUrl() + '?q=' + doc.text %>">
+        <div class="info">
+          <span class="name"><%= doc.text %>
+          <% if (doc.count > 0) { %>
+            <span class='count'><%= doc.count %></span>
+          <% } %>
+          </span>
+        </div>
+        <div class="clearer"></div>
+      </a>
+    </li>
+  <% }); %>
+<% } else { %>
+  <div class="left">
+    <!-- suggestions -->
+    <% if (suggests.count > 0 && suggests.enabled == 1) { %>
+      <div class="block-suggests">
+        <li class="qs-section">
+          <span class="qs-option-name">Do you mean?</span>
+        </li>
+        <% _.each(suggests.docs, function(doc) { %>
+          <li role="option" class="qs-option">
+            <a href="<%= _.getSearchUrl() + '?q=' + doc.text %>">
+              <div class="info">
+                <span class="name"><%= doc.text %>
+                  <% if (doc.count > 0) { %>
+                  <span class='count'><%= doc.count %></span>
+                  <% } %>
+                </span>
+              </div>
+              <div class="clearer"></div>
+            </a>
+          </li>
+        <% }); %>
+      </div>
+    <% } %>
+    <!-- categories -->
+    <% if (categories.enabled == 1) { %>
+    <div class="block-categories <% if (categories.count == 0) { %>no-result<% } %>">
+        <li class="qs-section">
+          <span class="qs-option-name">Categories</span>
+          <% if (categories.count > 0) { %>
+          	<span aria-hidden="true" class="amount"><%- categories.count %></span>
+          <% } %>
+        </li>
+        <% if (categories.count == 0) { %>
+          <span class='no-result'>No result</span>
+        <% } %>
+        <% _.each(categories.docs, function(doc) { %>
+          <li role="option" class="qs-option">
+            <a href="<%- doc.url %>">
+              <div class="info">
+                <span class="name"><%= doc.path %></span>
+              </div>
+              <div class="clearer"><!-- --></div>
+            </a>
+          </li>
+        <% }); %>
+      </div>
+    <% } %>
+    <!-- cms -->
+    <% if (cms.enabled == 1) { %>
+      <div class="block-cms <% if (cms.count == 0) { %>no-result<% } %>">
+        <li class="qs-section">
+          <span class="qs-option-name">Pages</span>
+          <% if (cms.count > 0) { %>
+          	<span aria-hidden="true" class="amount"><%- cms.count %></span>
+          <% } %>
+        </li>
+        <% if (cms.count == 0) { %>
+          <span class='no-result'>No result</span>
+        <% } %>
+        <% _.each(cms.docs, function(doc) { %>
+          <li role="option" class="qs-option">
+            <a href="<%= _.getBaseUrl() + doc.identifier %>">
+              <div class="info">
+                <span class="name"><%= doc.title %></span>
+              </div>
+              <div class="clearer"><!-- --></div>
+            </a>
+          </li>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+  <div class="sep"/>
+  <div class="right">
+    <!-- products -->
+    <% if (products.enabled == 1) { %>
+      <div class="block-products <% if (products.count == 0) { %>no-result<% } %>">
+        <li class="qs-section products">
+          <span class="qs-option-name">Products</span>
+          <% if (products.count > 0) { %>
+          	<span aria-hidden="true" class="amount"><%- products.count %></span>
+          <% } %>
+        </li>
+        <% if (products.count == 0) { %>
+        	<span class='no-result'>No result</span>
+        <% } %>
+        <% _.each(products.docs, function(doc) { %>
+          <li role="option" class="qs-option product">
+            <a href="<% if (typeof doc.shortest_url != "undefined") { %><%- doc.shortest_url %><% } else { %><%- doc.url %><% } %>">
+              <% if (doc.image) { %>
+              	<img src="<%- doc.image %>" alt="">
+              <% } %>
+              <div class="info">
+                <span class="name"><%= doc.name %></span>
+                <span class="category">in <%= doc.category %></span>
+                <span class="price">
+                  <div class="price-box">
+                    <% if (doc.type_id == 'bundle') { %>
+                      <p class="price-from">
+                        <span class="price-label">From:&nbsp;</span>
+                        <span class="price"><%= _.getFormattedPrice(doc.prices.min_price, doc.tax_class_id) %></span>
+                      </p>
+                      <p class="price-to">
+                        <span class="price-label">To:&nbsp;</span>
+                        <span class="price"><%= _.getFormattedPrice(doc.prices.max_price, doc.tax_class_id) %></span>
+                      </p>
+                    <% } else if (doc.type_id == 'grouped') { %>
+                      <p class="minimal-price">
+                        <span class="price-label">Starting at:&nbsp;</span>
+                        <span class="price"><%= _.getFormattedPrice(doc.prices.min_price, doc.tax_class_id) %></span>
+                      </p>
+                    <% } else { %>
+                      <% if (doc.prices.final_price < doc.prices.price) { %>
+                        <p class="old-price">
+                          <span class="price"><%= _.getFormattedPrice(doc.prices.price, doc.tax_class_id) %></span>
+                        </p>
+                        <p class="special-price">
+                          <span class="price"><%= _.getFormattedPrice(doc.prices.final_price, doc.tax_class_id) %></span>
+                        </p>
+                      <% } else { %>
+                        <span class="regular-price">
+                          <span class="price"><%= _.getFormattedPrice(doc.prices.price, doc.tax_class_id) %></span>
+                        </span>
+                      <% } %>
+                    <% } %>
+                  </div>
+                </span>
+              </div>
+              <div class="clearer"><!-- --></div>
+            </a>
+          </li>
+        <% }); %>
+      </div>
+      <% if (products.count > 0) { %>
+    	<span class="all-results"><a href="<%= _.getSearchUrl() + '?q=' + search_term %>">Show all results for <b><%= search_term %></b></a></span>
+      <% } %>
+    <% } %>
+  </div>
+<% } %>]]></js_template>
+                </advanced>
+            </autocomplete>
+            <types>
+                <doyoumean>
+                    <enable_search>1</enable_search>
+                    <enable_autocomplete>1</enable_autocomplete>
+                </doyoumean>
+                <product>
+                    <auto_redirect>0</auto_redirect>
+                    <enable_autocomplete>1</enable_autocomplete>
+                    <autocomplete_limit>5</autocomplete_limit>
+                    <image_size>50</image_size>
+                </product>
+                <category>
+                    <enable>1</enable>
+                    <enable_autocomplete>1</enable_autocomplete>
+                    <autocomplete_limit>5</autocomplete_limit>
+                    <enable_search>1</enable_search>
+                    <limit/>
+                    <show_path>1</show_path>
+                    <attributes><![CDATA[name,description]]></attributes>
+                </category>
+                <cms>
+                    <enable>1</enable>
+                    <enable_autocomplete>1</enable_autocomplete>
+                    <autocomplete_limit>5</autocomplete_limit>
+                    <enable_search>1</enable_search>
+                    <limit/>
+                    <attributes><![CDATA[identifier,title,content_heading,content]]></attributes>
+                    <excluded_pages/>
+                </cms>
+            </types>
+        </elasticsearch>
+    </default>
+</config>

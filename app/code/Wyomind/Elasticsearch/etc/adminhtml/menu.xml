@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+ Copyright © 2016 Wyomind. All rights reserved.
+ See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        
+        <add id="Wyomind_Elasticsearch::main" 
+             parent="Magento_Backend::system" 
+             module="Wyomind_Elasticsearch" 
+             title="Elasticsearch" 
+             sortOrder="999" 
+             resource="Wyomind_Elasticsearch::main"
+        />
+        
+        <!-- PRODUCTS -->
+        
+        <add id="Wyomind_Elasticsearch::products" 
+             parent="Wyomind_Elasticsearch::main" 
+             module="Wyomind_Elasticsearch" 
+             title="Browse Products" 
+             sortOrder="110" 
+             resource="Wyomind_Elasticsearch::products"
+             action="elasticsearch/browse/products"
+        />
+        
+        <!-- CATEGORIES -->
+        
+        <add id="Wyomind_Elasticsearch::categories" 
+             parent="Wyomind_Elasticsearch::main" 
+             module="Wyomind_Elasticsearch" 
+             title="Browse Categories" 
+             sortOrder="120" 
+             resource="Wyomind_Elasticsearch::categories"
+             action="elasticsearch/browse/categories"
+        />
+    
+        <!-- CMS -->
+        
+        <add id="Wyomind_Elasticsearch::cms" 
+             parent="Wyomind_Elasticsearch::main" 
+             module="Wyomind_Elasticsearch" 
+             title="Browse CMS Pages" 
+             sortOrder="130" 
+             resource="Wyomind_Elasticsearch::cms"
+             action="elasticsearch/browse/cms"
+        />
+        
+    </menu>
+</config>

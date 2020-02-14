@@ -1,0 +1,177 @@
+<?php
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+//$countryFactory = $objectManager->get('\Magento\Directory\Model\ResourceModel\Country\CollectionFactory')->create();
+$countryFactory = $objectManager->get('\Magento\Directory\Model\Country');
+$distributorModel = $objectManager->get('\Intesols\Distributor\Model\DistributorFactory')->create();
+$allrd = $distributorModel->getCollection()->load();
+$allrd->setOrder('position','ASC');
+$avil_country = [];
+$store_country_code = $this->helper('Intesols\Distributor\Helper\Data')->getCountryCode();
+//echo "<pre>";
+/*echo "Count :- ".$allrd->count();
+*/
+//print_r($allrd->getData());
+$i = 1;
+foreach($allrd->getData() as $srd){
+	//echo $i;
+	//echo "<span>";
+	//echo gettype($srd);
+	//print_r($srd['country']);
+	//echo "<br />";
+	if($srd['country']){
+			if(strpos($srd['country'],",") || strpos($srd['country'],",") === 0){
+			$exploeCountry = explode(",",$srd['country']);
+			//print_r($exploeCountry);
+			foreach($exploeCountry as $escountry){
+				if(!in_array($escountry, $avil_country) && $escountry){
+					$avil_country[] = $escountry;
+				}				
+			}
+			
+		}else{
+			if(!in_array($srd['country'], $avil_country)){
+				$avil_country[] = $srd['country'];		
+		}	}
+	}
+	//echo "</span>";
+	$i++;
+}
+//print_r($avil_country);
+//echo "</pre>";
+
+
+
+?>
+<?php if(count($avil_country)): ?>
+<?php sort($avil_country); ?>
+<div class="country-seletor-section">
+<span class="">Country: </span>
+<select id="country-seletor">
+<?php
+	foreach($avil_country as $sac){
+		$distributorModel1 = $countryFactory->loadByCode($sac);
+		//echo "$sac 99999 $store_country_code";
+		//echo $distributorModel1->getName();
+        if($sac == $store_country_code) {
+            echo '<option selected value="'.$sac.'">';
+        } else {
+		echo '<option value="'.$sac.'">';
+        }
+		echo $distributorModel1->getName();
+		echo '</option>';
+	}	
+endif;
+?>
+</select>
+</div>
+<?php //echo $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]); 
+parse_str($_SERVER["QUERY_STRING"], $query_array);
+$changeSelection = 0;
+//print_r($query_array); 
+if(array_key_exists('con',$query_array)){
+	$selectedCountry = $query_array['con'];
+	$changeSelection = 1;
+}else{
+    $selectedCountry = $store_country_code;
+	//$selectedCountry = $avil_country[0];
+}
+$thisReseller = [];
+$thisDistributor = [];
+$thisNationalRetailer = [];
+//print_r($allrd->getData());
+foreach($allrd->getData() as $srd){
+	//var_dump(strpos($srd['country'],$selectedCountry) || strpos($srd['country'],$selectedCountry) === 0);
+	if((strpos($srd['country'],$selectedCountry) || strpos($srd['country'],$selectedCountry) === 0) && $srd['type'] == 1 && $srd['status'] == 1 ){
+		$thisReseller[] = $srd;
+	}elseif((strpos($srd['country'],$selectedCountry) || strpos($srd['country'],$selectedCountry) === 0) && $srd['type'] == 2 && $srd['status'] == 1 ){
+		$thisDistributor[] = $srd;
+	} elseif((strpos($srd['country'],$selectedCountry) || strpos($srd['country'],$selectedCountry) === 0) && $srd['type'] == 3 && $srd['status'] == 1 ){
+		$thisNationalRetailer[] = $srd;
+	} else{
+		
+	}				
+}
+?>
+<div class="rd-container">	
+	<div class="distributors">
+		<h2>Distributors</h2>
+		<?php if($thisDistributor): ?>
+		<div class="client-logoes">
+		<ul>
+		<?php 
+			foreach($thisDistributor as $singleDistributer){
+		?>		
+				<li class="item">				
+					<span><a target="_blank" href="<?php echo $singleDistributer['logo_url'] ?>"><img src=<?php echo '"'.$this->getUrl('pub/media').$singleDistributer['logo'].'"'; ?> alt=<?php echo $singleDistributer['name'] ?> /></a></span>
+				</li>
+		<?php		
+			}
+		?>
+		</ul>	
+		</div>
+		<?php else: ?>
+		<div  class="client-logoes"><p>No Distributors Available in This Country.</p></div>
+		<?php endif; ?>
+	</div>
+    <div class="distributors">
+		<h2>National Retailers</h2>
+		<?php if($thisNationalRetailer): ?>
+		<div class="client-logoes">
+		<ul>
+		<?php 
+			foreach($thisNationalRetailer as $singleNationalRetailer){
+		?>		
+				<li class="item">				
+                    <span><a target="_blank" href="<?php echo $singleNationalRetailer['logo_url'] ?>"><img src=<?php echo '"'.$this->getUrl('pub/media').$singleNationalRetailer['logo'].'"'; ?> alt=<?php echo $singleNationalRetailer['name'] ?> /></a></span>
+				</li>
+		<?php		
+			}
+		?>
+		</ul>	
+		</div>
+		<?php else: ?>
+		<div  class="client-logoes"><p>No National Retailers Available in This Country.</p></div>
+		<?php endif; ?>
+	</div>
+	<div class="online-resellers">
+		<h2>Resellers</h2>
+		<?php if($thisReseller): ?>
+		<div class="client-logoes">
+		<ul>
+		<?php 
+			foreach($thisReseller as $singleReseller){
+		?>		
+				<li class="item">				
+                    <span><a target="_blank" href="<?php echo $singleReseller['logo_url'] ?>"><img src=<?php echo '"'.$this->getUrl('pub/media').$singleReseller['logo'].'"'; ?> alt=<?php echo $singleReseller['name'] ?> /></a></span>
+				</li>	
+		<?php		
+			}			
+		?>
+		</ul>
+		</div>
+		<?php else: ?>
+		<div class="client-logoes"><p>No Resellers Available in This Country.</p></div>
+		<?php endif; ?>
+	</div>	
+</div>
+
+
+<script type="text/javascript">
+	if(<?php echo $changeSelection; ?>){
+		jQuery(document).ready(function () {			
+			jQuery('#country-seletor>option[value="<?php echo $selectedCountry; ?>"]').prop('selected',true);
+		});	
+	}
+	
+	jQuery("#country-seletor").change(function () {
+    var str = "";
+    jQuery( "select option:selected" ).each(function() {      
+	  //alert(jQuery( this ).text()+" = "+jQuery( this ).val());	  
+	  var newUrl = '<?php echo $block->getUrl('', array('_direct'=>'reselleranddistributor')); ?>'+'?con='+jQuery( this ).val();
+	  //alert(newUrl);
+	  window.location.href = newUrl;
+    });    
+  });
+</script>

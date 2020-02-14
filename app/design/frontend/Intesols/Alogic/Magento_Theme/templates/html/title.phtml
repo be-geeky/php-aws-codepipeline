@@ -1,0 +1,82 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$request = $objectManager->get('Magento\Framework\App\Action\Context')->getRequest();
+ if ($request->getFullActionName() == 'catalog_category_view') {
+    $title = '';
+	return;
+	
+}
+
+
+if ($request->getFullActionName() == 'catalog_product_view') { ?>
+
+
+
+
+
+<?php
+$registry = $objectManager->get('\Magento\Framework\Registry');
+$currentProduct = $registry->registry('current_product');
+$cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
+$title = '';
+if (trim($block->getPageHeading())) {
+    $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+        . $block->escapeHtml($block->getPageHeading()) . '</span>';
+}
+?>
+<?php if ($title): ?>
+<div class="page-title-wrapper<?php /* @escapeNotVerified */ echo $cssClass; ?>">
+	<div class="container-ad">
+		<h1 class="page-title"
+			<?php if ($block->getId()): ?> id="<?php /* @escapeNotVerified */ echo $block->getId();?>" <?php endif; ?>
+			<?php if ($block->getAddBaseAttributeAria()): ?>
+				aria-labelledby="<?php /* @escapeNotVerified */ echo $block->getAddBaseAttributeAria(); ?>"
+			<?php endif; ?>>
+			<?php /* @escapeNotVerified */ echo $title ?>
+		</h1>
+		<?php echo $block->getChildHtml(); ?>
+	</div> 
+</div>
+<?php endif;  ?>
+
+<?php 
+if(!empty($currentProduct->getShortDescription())) {
+	echo '<div class="sdesc">'. $currentProduct->getShortDescription().'</div>';
+	echo $this->getLayout()->createBlock("Magento\Catalog\Block\Product\View\abstractView")->setTemplate("Magento_Catalog::product/view/eol.phtml")->toHtml(); 
+}
+?>
+	
+<?php } else {
+
+$cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
+$title = '';
+if (trim($block->getPageHeading())) {
+    $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+        . $block->escapeHtml($block->getPageHeading()) . '</span>';
+}
+?>
+<?php if ($title): ?>
+<div class="page-title-wrapper<?php /* @escapeNotVerified */ echo $cssClass; ?>">
+	<div class="container-ad">
+		<h1 class="page-title"
+			<?php if ($block->getId()): ?> id="<?php /* @escapeNotVerified */ echo $block->getId();?>" <?php endif; ?>
+			<?php if ($block->getAddBaseAttributeAria()): ?>
+				aria-labelledby="<?php /* @escapeNotVerified */ echo $block->getAddBaseAttributeAria(); ?>"
+			<?php endif; ?>>
+			<?php /* @escapeNotVerified */ echo $title ?>
+		</h1>
+		<?php echo $block->getChildHtml(); ?>
+	</div> 
+</div>
+<?php endif; 
+} ?>

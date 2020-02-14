@@ -1,0 +1,22 @@
+<?php
+$barcode = "";
+$_product = $block->getProduct();
+if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+		$_children = $_product->getTypeInstance()->getUsedProducts($_product);
+		foreach($_children as $child){		
+			$barcode = $child->getBarcodeEan();			
+			break;
+		}
+	}	 else  {
+		$barcode = $_product->getBarcodeEan();			
+		}
+		
+if(!empty($barcode)) {
+?>
+
+<div class="product attribute barcode">
+    <strong class="type">Barcode</strong>    <div class="value"><?php echo $barcode; ?></div>
+</div>
+<?php		
+}
+?>

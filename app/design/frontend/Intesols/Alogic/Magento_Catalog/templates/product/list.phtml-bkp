@@ -1,0 +1,694 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ */
+?>
+
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$currentStore = $storeManager->getStore();
+$current_category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');
+if ($current_category && !($current_category->getLevel() == 4 && $current_category->getChildren())) {
+    echo "<h2>" . $current_category->getName() . "</h2>";
+} 
+/**
+ * Position for actions regarding image size changing in vde if needed
+ */
+$pos = $block->getPositioned();
+$_productCollection = $block->getLoadedProductCollection();
+//$_helper = $this->helper('Magento\Catalog\Helper\Output');
+$attachmentBlock = $objectManager->create('\MageWorx\Downloads\Block\Catalog\Product\Attachments');
+?>
+
+<?php
+function truncate($string, $length, $stopanywhere = false)
+{
+    //truncates a string to a certain char length, stopping on a word if not specified otherwise.
+    if (strlen($string) > $length) {
+        //limit hit!
+        $string = substr($string, 0, ($length - 3));
+        if ($stopanywhere) {
+            //stop anywhere
+            $string .= '...';
+        } else {
+            //stop on a word.
+            $string = substr($string, 0, strrpos($string, ' ')) . '...';
+        }
+    }
+    return $string;
+}
+
+?>
+<div class="main-cat-category">
+    <?php
+    //echo $current_category->getData();
+    // print_r($current_category->getData());
+    //echo "<br/>"."Child :- ";
+    //var_dump($current_category->getChildren());
+    //echo $current_category->getChildren();
+    if ($current_category && ($current_category->getLevel() == 3 || $current_category->getLevel() == 2) && $current_category->getChildren()):
+    ?>
+    <h2 style="display:none;">Categories</h2>
+    <?php
+    $category_collection = $objectManager->get('\Magento\Catalog\Model\CategoryFactory')->create()->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active', 1)->setOrder('position', 'ASC')->addIdFilter($current_category->getChildren());
+    foreach ($category_collection as $category) {
+        $catThumb = $category->getImageUrl();
+        if (!$catThumb) {
+            $catThumb = $block->getUrl('', array('_direct' => 'pub/media/catalog/category/cateThumb.jpg'));
+        }
+        //echo $category->getId();
+        //echo get_class($block);
+        ?>
+        <?php /*  if ($block->hasAnyProduct($category->getId())) {  */ ?>
+        <a class="block-promo sub-cat-list" href="<?php echo $category->getUrl() ?>">
+            <img src="<?php echo $catThumb ?>" alt="<?php echo $category->getName() ?>"/>
+            <span class="content"><strong class="title"><?php echo $category->getName() ?></strong></span>
+        </a>
+        <?php /*  }  */ ?>
+        <?php
+    }
+    ?>
+</div>
+    <script>
+        jQuery(window).load(function () {
+            var dd = 0;
+            jQuery(".subcat-view .product-item").each(function () {
+
+                var h = jQuery(this).height();
+                if (h > dd) {
+                    dd = h;
+                }
+            });
+            jQuery('.subcat-view .product-item').css('height', dd + 'px');
+            var dp = 0;
+            jQuery(".main-cat-category .product-item").each(function () {
+                var hs = jQuery(this).height();
+                if (hs > dp) {
+                    dp = hs;
+                }
+            });
+            jQuery('.main-cat-category .product-item').css('height', dp + 'px');
+
+        });
+        jQuery(window).resize(function () {
+            var dd = 0;
+            jQuery(".subcat-view .product-item").each(function () {
+                jQuery('.subcat-view .product-item').css('height', '');
+                var h = jQuery(this).height();
+                if (h > dd) {
+                    dd = h;
+                }
+            });
+            jQuery('.subcat-view .product-item').css('height', dd + 'px');
+            var dp = 0;
+            jQuery(".main-cat-category .product-item").each(function () {
+                jQuery('.main-cat-category .product-item').css('height', '');
+                var hs = jQuery(this).height();
+                if (hs > dp) {
+                    dp = hs;
+                }
+            });
+            jQuery('.main-cat-category .product-item').css('height', dp + 'px');
+        });
+    </script>
+<?php if ($current_category->getID() == 20 || $current_category->getID() == 181) { ?>
+    <?php $subcategory_products = $objectManager->get('Magento\Framework\Registry')->registry('current_category')->getProductCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_featured_product_solutions', 1)->setPageSize('2');
+    ?>
+<?php } else { ?>
+    <span style="display:none">jayl</span>
+    <?php $subcategory_products = $objectManager->get('Magento\Framework\Registry')->registry('current_category')->getProductCollection()->addAttributeToSelect('*')->addStoreFilter()->addAttributeToFilter('is_featured_product', 1)->setPageSize('2');
+    ?>
+<?php } ?>
+<?php
+elseif ($current_category && $current_category->getLevel() == 4 && $current_category->getChildren()):
+    $category_collection = $objectManager->get('\Magento\Catalog\Model\CategoryFactory')->create()->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active', 1)->setOrder('position', 'ASC')->addIdFilter($current_category->getChildren());
+    $numofcat = 1;
+    $ffd = 0;
+    foreach ($category_collection as $category) {
+        $subcategory_products = $category->getProductCollection()->addAttributeToSelect('*')
+            ->addAttributeToFilter('visibility', 4)->setPageSize(5)->setCurPage(1);
+        ?>
+        <div class="subcat-view">
+            <div class="subcat-title"><h2><?php echo $category->getName() ?></h2></div>
+            <div class="subcat-data">
+                <div class="subcat-des">
+                    <div class="subcat-des-text"><?php echo $category->getDescription() ?></div>
+                </div>
+            </div>
+            <div class="subcat-des diff dim<?php echo $ffd; ?>">
+                <div id="owl-demo-<?php echo $numofcat ?>" class="owl-carousel subcat-pros">
+                    <?php $numofpro = 1; ?>
+                    <?php foreach ($subcategory_products as $subcategory_product): ?>
+                        <?php $subCateProductImage = $block->getImage($subcategory_product, 'sub_category_pro'); ?>
+                        <div class="subcat-pro item ff">
+                            <div class="search-product-image">
+                                <a href="<?php echo $subcategory_product->getProductUrl() ?>"
+                                   class="product photo product-item-photo"
+                                   tabindex="-1">
+                                    <?php echo $subCateProductImage->toHtml(); ?>
+                                </a>
+                            </div>
+                            <div class="ptitle">
+                                <a href="<?php echo $subcategory_product->getProductUrl() ?>" class="ptext">
+                                    <?php echo $subcategory_product->getName(); ?>
+                                </a>
+                            </div>
+                            <?php if ($subcategory_product->getShowForSale() == 1 && $subcategory_product->getForSale() == 1) { ?>
+                                <div class="cate-pro-price">
+                                    <?php
+                                    echo $this->getProductPrice($subcategory_product);
+
+                                    ?>
+                                </div>
+                            <?php } ?>
+
+                            <?php $block->getProductDetailsHtml($subcategory_product); ?>
+                            <?php
+                            //$pos = $block->getPositioned();
+                            if ($block->getMode() == 'grid') {
+                                $viewMode = 'grid';
+                                $image = 'category_page_grid';
+                                $showDescription = false;
+                                $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+                            } else {
+                                $viewMode = 'list';
+                                $image = 'category_page_list';
+                                $showDescription = true;
+                                $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+                            }
+                            ?>
+                            <div class="lastBC product-item-inner">
+
+                                <?php if ($subcategory_product->getShowForSale() == 1 && $subcategory_product->getForSale() == 1) { ?>
+                                    <a title="Add to Cart" class="action tocart primary"
+                                       href="<?php echo $subcategory_product->getProductUrl() ?>">
+                                        <span>View Details</span>
+                                    </a>
+                                    <div style="display:none;">
+                                        <?php echo $block->getProductDetailsHtml($subcategory_product); ?>
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="nocart">
+                                        <div class="innocart">
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                            <span>Please contact our resellers to purchase this product </span>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+
+                                <?php echo $block->getReviewsSummaryHtml($subcategory_product, "sort", true); ?>
+
+
+                                <div class="psku"> <?php echo $subcategory_product->getSku(); ?> </div>
+                            </div>
+                        </div>
+                        <?php $numofpro++; endforeach; ?>
+
+                    <?php if (count($subcategory_products) > 3) { ?>
+                        <div class="subcat-pro item view-more">
+                            <a href="<?php echo $category->getUrl() ?>" class="product photo product-item-photo"
+                               tabindex="-1">
+								<span class="product-image-container" style="width:200px;">
+									<span class="product-image-wrapper" style="padding-bottom: 100%;">
+										<img class="product-image-photo"
+                                             src="<?php echo $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA); ?>alogic/product-df.jpg"
+                                             alt=""
+                                             width="200" height="200"></span>
+								</span>
+                            </a>
+                            <div class="product details product-item-details">
+                                <div class="cate-pro-name"><a href="<?php echo $category->getUrl() ?>">View More</a>
+                                </div>
+                                <span class="len-attr"></span>
+                                <div class="cate-pro-des"></div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <?php if (count($subcategory_products) <= 3) { ?>
+                    <style>
+                        #owl-demo-<?php echo $numofcat ?> .owl-stage-outer {
+                            overflow-x: hidden;
+                        }
+                        .dim<?php echo $ffd;?> .customNavigation {
+                            display: none;
+                        }
+                        @media only screen and (max-width: 1024px) {
+                            #owl-demo-<?php echo $numofcat ?> .owl-stage-outer {
+                                overflow-x: visible;
+                            }
+                            .dim<?php echo $ffd;?> .customNavigation {
+                                display: block;
+                            }
+                        }
+                    </style>
+                <?php } ?>
+                <div class="customNavigation">
+                    <a class="btn prev-<?php echo $numofcat ?>"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i></a>
+                    <a class="btn next-<?php echo $numofcat ?>"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="subcat-des-btn">
+				<a href="<?php echo $category->getUrl() ?>" title="Shop Now" class="action tocart primary"><span>View Sub Category</span>
+					<i class="fa fa fa-angle-right"></i>
+				</a>
+			</div>
+        </div>
+        <?php /* endif;  */ ?>
+        <script>
+            jQuery(document).ready(function () {
+                var d = jQuery('.subcat-view').width() - 70;
+                jQuery('.subcat-pros').css('width', d + 'px');
+                var owl<?php echo $numofcat ?> = jQuery("#owl-demo-<?php echo $numofcat ?>");
+                owl<?php echo $numofcat ?>.owlCarousel({
+                    loop: false,
+                    nav: true,
+                    margin: 10,
+                    pagination: false,
+                    responsiveClass: true,
+                    responsive: {
+                        0: {
+                            items: 1, // In this configuration 1 is enabled from 0px up to 479px screen size
+                            autoWidth: false,
+                            nav: false,
+                            center: true,
+                        },
+                        480: {
+                            items: 1, // from 480 to 677
+                            autoWidth: false,
+                            center: true,
+                            nav: true,
+                        },
+                        768: {
+                            items: 2, // from this breakpoint 678 to 959
+                            center: false, // only within 678 and next - 959
+                            nav: true,
+                        },
+                        960: {
+                            items: 3, // from this breakpoint 960 to 1199
+                            margin: 20, // and so on...
+                            center: true,
+                            nav: true,
+                        },
+                        1200: {
+                            items: 3,
+                            loop: false,
+                            margin: 20,
+                            nav: true,
+                            autoWidth: false,
+                        }
+
+                    }
+                });
+
+                jQuery(".next-<?php echo $numofcat ?>").click(function (e) {
+                    e.preventDefault();
+                    owl<?php echo $numofcat ?>.trigger('next.owl.carousel');
+                    /*var singleElementLenght = jQuery("#owl-demo-<?php echo $numofcat ?> .owl-item").outerWidth();
+                     //var current_left = jQuery("#owl-demo-<?php echo $numofcat ?>").scrollLeft();
+                     jQuery("#owl-demo-<?php echo $numofcat ?>").scrollLeft(singleElementLenght);*/
+                });
+                jQuery(".prev-<?php echo $numofcat ?>").click(function (e) {
+                    e.preventDefault();
+                    owl<?php echo $numofcat ?>.trigger('prev.owl.carousel');
+                });
+
+            });
+            jQuery(window).resize(function () {
+                var d = jQuery('.subcat-view').width() - 70;
+                jQuery('.subcat-pros').css('width', d + 'px');
+            });
+            jQuery(window).load(function () {
+                var dd = 0;
+                jQuery("#owl-demo-<?php echo $numofcat ?> .owl-item").each(function () {
+                    jQuery('#owl-demo-<?php echo $numofcat ?> .owl-item').css('height', '');
+                    var h = jQuery(this).height();
+                    if (h > dd) {
+                        dd = h;
+                    }
+                });
+                jQuery('#owl-demo-<?php echo $numofcat ?> .owl-item').css('height', dd + 'px');
+            });
+
+            jQuery(window).resize(function () {
+                var dd = 0;
+                jQuery("#owl-demo-<?php echo $numofcat ?> .owl-item").each(function () {
+                    jQuery('#owl-demo-<?php echo $numofcat ?> .owl-item').css('height', '');
+                    var h = jQuery(this).height();
+                    console.log(h);
+                    if (h > dd) {
+                        dd = h;
+                    }
+                });
+                jQuery('#owl-demo-<?php echo $numofcat ?> .owl-item').css('height', dd + 'px');
+
+            });
+        </script>
+        <?php
+        $numofcat++;
+        $ffd++;
+    }
+    ?>
+    <?php //Close unknown div
+    ?>
+    </div>
+<?php
+elseif (!$current_category):
+    ?>
+    <?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?php /* @escapeNotVerified */
+            echo __('We can\'t find products matching the selection.') ?></div>
+    </div></div>
+<?php else: ?>
+    <?php //echo $block->getToolbarHtml() ?>
+    <?php //echo $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() == 'grid') {
+        $viewMode = 'grid';
+        $image = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $image = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    $viewMode = 'list';
+    $image = 'category_page_list';
+    $showDescription = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+   // $pos = $block->getPositioned();
+    ?>
+    <div class="products wrapper <?php /* @escapeNotVerified */
+    echo $viewMode; ?> products-<?php /* @escapeNotVerified */
+    echo $viewMode; ?>">
+        <?php $iterator = 1; ?>
+        <ol class="subcat-view products list items product-items-">
+            <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($_productCollection as $_product): ?>
+                <?php /* @escapeNotVerified */
+                echo ($iterator++ == 1) ? '<li class="item product">' : '</li><li class="item product">' ?>
+                <div class="product-item-info- src-item-row" data-container="product-grid">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-2">
+                            <?php
+                            $productImage = $block->getImage($_product, $image);
+                            if ($pos != null) {
+                                $position = ' style="left:' . $productImage->getWidth() . 'px;'
+                                    . 'top:' . $productImage->getHeight() . 'px;"';
+                            }
+                            ?>
+                            <?php // Product Image ?>
+                            <div class="search-product-image">
+                                <a href="<?php /* @escapeNotVerified */
+                                echo $_product->getProductUrl() ?>" class="product photo product-item-photo"
+                                   tabindex="-1">
+                                    <?php echo $productImage->toHtml(); ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-10 col-xs-10">
+                            <div class="search-product-info1">
+                                <span class="search-product-name"><a
+                                            href="<?php echo $_product->getProductUrl(); ?>"><?php echo $_product->getName(); ?></a></span>
+                                <div div class="search-product-info2">
+                                    <span class="search-product-des extra-down"><?php echo $_product->getShortDescription(); ?></span>
+                                </div>
+                                <div div class="search-product-sku">
+                                    <span class="search-product-des extra-down"><?php echo $_product->getSku(); ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 last-one">
+                            <div class="dwn-links">
+                                <?php echo "<a href='" . $_product->getProductUrl() . "' title='" . $_product->getName() . "'><span>Product Page</span></a>"; ?>
+                                <?php
+                                $all_attach = $attachmentBlock->getAttachmentCollection(false, $_product->getId());
+                                $attachment_count = 1;
+                                foreach ($all_attach as $attachment):
+                                    if ($attachment->getSectionId() == 4) {
+                                        ?>
+                                        <br/>
+                                        <a href="<?php echo $block->getUrl() . 'pub/media/mageworx/downloads/attachment/file' . $attachment->getFilename() ?>"
+                                           rel="nofollow" target="_blank"
+                                           title="#"><?php /* echo "[".$_product->getSku().']'; */ ?> Specsheets</a>
+                                        <?php
+                                    } else if ($attachment->getSectionId() == 3) { ?>
+                                        <a href="<?php echo $block->getUrl() . 'pub/media/mageworx/downloads/attachment/file' . $attachment->getFilename() ?>"
+                                           rel="nofollow" target="_blank"
+                                           title="#"><?php echo "[" . $_product->getSku() . ']'; ?>Manual</a>
+
+                                    <?php } else if ($attachment->getSectionId() == 2) { ?>
+                                        <a href="<?php echo $block->getUrl() . 'pub/media/mageworx/downloads/attachment/file' . $attachment->getFilename() ?>"
+                                           rel="nofollow" target="_blank"
+                                           title="#"><?php echo "[" . $_product->getSku() . ']'; ?> Drivers </a>
+
+                                    <?php } else { ?>
+                                        <a href="<?php echo $block->getUrl() . 'pub/media/mageworx/downloads/attachment/file' . $attachment->getFilename() ?>"
+                                           rel="nofollow" target="_blank"
+                                           title="#"><?php echo "[" . $_product->getSku() . ']'; ?><?php echo $attachment->getName(); ?> </a>
+
+                                    <?php } ?>
+                                <?php
+                                endforeach;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php echo ($iterator == count($_productCollection) + 1) ? '</li>' : '' ?>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+    <?php echo $block->getToolbarHtml() ?>
+    <?php if (!$block->isRedirectToCartEnabled()) : ?>
+        <script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+        </script>
+        <script type="text/javascript">
+            jQuery("#more-button,#less-button").click(function (e) {
+                var rowParent = jQuery(this).parent().parent();
+                rowParent.toggleClass("active");
+            });
+        </script>
+        <style>
+            .extra-down {
+                display: none;
+            }
+
+            .row.active .extra-down {
+                display: block;
+            }
+
+            .extra-down-re {
+                display: block;
+            }
+
+            .row.active .extra-down-re {
+                display: none;
+            }
+        </style>
+    <?php endif; ?>
+    <?php //Close unknown div ?>
+    </div>
+<?php endif; ?>
+<?php
+else:
+    ?>
+    <?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?php /* @escapeNotVerified */
+            echo __('We can\'t find products matching the selection.') ?></div>
+    </div></div>
+<?php else: ?>
+    <?php //echo $block->getToolbarHtml() ?>
+    <?php //echo $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() == 'grid') {
+        $viewMode = 'grid';
+        $image = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $image = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    //$pos = $block->getPositioned();
+    ?>
+    <div class="products wrapper <?php /* @escapeNotVerified */
+    echo $viewMode; ?> products-<?php /* @escapeNotVerified */
+    echo $viewMode; ?>">
+        <?php $iterator = 1; ?>
+        <ol class="subcat-view products list items product-items">
+            <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($_productCollection as $_product): ?>
+                <?php /* @escapeNotVerified */
+                echo ($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
+                <div class="subcat-pro item gggggggg">
+                    <div class="search-product-image">
+                        <?php
+                        //$pos = $block->getPositioned();
+                        if ($block->getMode() == 'grid') {
+                            $viewMode = 'grid';
+                            $image = 'category_page_grid';
+                            $showDescription = false;
+                            $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+                        } else {
+                            $viewMode = 'list';
+                            $image = 'category_page_list';
+                            $showDescription = true;
+                            $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+                        }
+                        ?>
+                        <?php
+                        $productImage = $block->getImage($_product, $image);
+                        if ($pos != null) {
+                            $position = ' style="left:' . $productImage->getWidth() . 'px;'
+                                . 'top:' . $productImage->getHeight() . 'px;"';
+                        }
+                        ?>
+                        <a href="<?php /* @escapeNotVerified */
+                        echo $_product->getProductUrl() ?>" class="product photo product-item-photo" tabindex="-1">
+                            <?php echo $productImage->toHtml(); ?>
+                        </a>
+                    </div>
+                    <div class="ptitle">
+                        <a href="<?php echo $_product->getProductUrl() ?>" class="ptext">
+                            <?php echo $_product->getName(); ?>
+                        </a>
+                    </div>
+                    <?php if ($_product->getShowForSale() == 1 && $_product->getForSale() == 1) { ?>
+                        <div class="cate-pro-price">
+                            <?php /* @escapeNotVerified */
+                            echo $block->getProductPrice($_product) ?>
+                        </div>
+                    <?php } ?>
+					
+                    <div class="lastBC">
+                        <?php if ($_product->getShowForSale() == 1 && $_product->getForSale() == 1) { ?>
+                            <a title="Add to Cart" class="action tocart primary"
+                               href="<?php echo $_product->getProductUrl() ?>">
+                                <span>View Details</span>
+                            </a>
+                            <div style="display:none;">
+                                <?php echo $block->getProductDetailsHtml($_product); ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="nocart">
+                                <div class="innocart">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                    <span>Please contact our resellers to purchase this product </span>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php echo $block->getReviewsSummaryHtml($_product, "sort", true); ?>
+
+                        <div class="psku"> <?php echo $_product->getSku(); ?> </div>
+
+                    </div>
+                </div>
+                <?php echo ($iterator == count($_productCollection) + 1) ? '</li>' : '' ?>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+    <?php echo $block->getToolbarHtml() ?>
+    <?php if (!$block->isRedirectToCartEnabled()) : ?>
+        <script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+        </script>
+    <?php endif; ?>
+    <?php //Close unknown div ?>
+    </div>
+<?php endif; ?>
+<?php endif; ?>
+<script type="text/javascript">
+    jQuery(window).load(function () {
+        jQuery(".level2.activeis-active").parent().parent().addClass("bbbbbbbb");
+        jQuery(".bbbbbbbb .expanded").html('<i class="fa fa-angle-down"></i>');
+    });
+</script>
+<script type="text/javascript">
+    require(['jquery', 'domReady!'], function ($) {
+        $(".btn-qty").click(function (event) {
+            var $button = $(this);
+            var oldValue = $button.closest('.control').find(".qty").val();
+            var defaultValue = <?php /* @escapeNotVerified */ echo 1 ?>;
+            if ($button.hasClass('plus')) {
+                var newVal = parseFloat(oldValue) + 1;
+            } else {
+                if (oldValue > defaultValue) {
+                    var newVal = parseFloat(oldValue) - 1;
+                } else {
+                    newVal = defaultValue;
+                }
+            }
+            $button.closest('.control').find(".qty").val(newVal);
+            event.preventDefault();
+        });
+    });
+</script>
+
+<script>
+    jQuery(window).load(function () {
+        setTimeout(function () {
+            var dp = 0;
+            jQuery(".main-cat-category .product-item").each(function () {
+                var hs = jQuery(this).height();
+                if (hs > dp) {
+                    dp = hs;
+                }
+            });
+            var msss = dp + parseInt(19);
+
+            jQuery('.main-cat-category .product-item').css('height', msss + 'px');
+            jQuery('.lastBC').css('position', 'absolute');
+            jQuery('.lastBC').css('bottom', '20px');
+        }, 1000);
+    });
+
+    jQuery(window).resize(function () {
+        var dp = 0;
+        jQuery(".main-cat-category .product-item").each(function () {
+            jQuery('.main-cat-category .product-item').css('height', '');
+            var hs = jQuery(this).height();
+            if (hs > dp) {
+                dp = hs;
+            }
+        });
+        var msss = dp + parseInt(19);
+        jQuery('.main-cat-category .product-item').css('height', dp + 'px');
+    });
+</script>

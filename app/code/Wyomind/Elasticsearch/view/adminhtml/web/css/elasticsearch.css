@@ -1,0 +1,20 @@
+span.error {
+    color : red;
+}
+span.success {
+    color : green;
+}
+
+textarea#elasticsearch_autocomplete_advanced_css_rules {
+    display:none;
+}
+textarea#elasticsearch_autocomplete_advanced_js_template {
+    display:none;
+}
+
+.CodeMirror {
+    width:900px;
+}
+.CodeMirror-fullscreen {
+    width:auto!important;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="top.search">
+            <action method="setTemplate" ifconfig="elasticsearch/autocomplete/enable">
+                <argument name="template" xsi:type="string">Wyomind_Elasticsearch::form.mini.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

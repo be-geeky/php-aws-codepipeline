@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+ Copyright © 2016 Wyomind. All rights reserved.
+ See LICENSE.txt for license details.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Wyomind_Elasticsearch::css/jquery.jsonview.min.css"/>
+        <link src="Wyomind_Elasticsearch::js/browse.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="elasticsearch_cms_listing"/>
+            <block template="Wyomind_Elasticsearch::raw.phtml" class="Magento\Backend\Block\Template" name="wyomind_elasticsearch_cms_raw"/>
+        </referenceContainer>
+    </body>
+</page>

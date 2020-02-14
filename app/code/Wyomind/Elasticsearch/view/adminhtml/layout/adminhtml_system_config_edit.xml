@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <link src="Wyomind_Elasticsearch::js/elasticsearch.js"/>
+        <css src="Wyomind_Elasticsearch::css/elasticsearch.css"/>
+        <css src="Wyomind_Core::js/codemirror/codemirror.css"/>
+        <css src="Wyomind_Core::js/codemirror/mdn-like.css"/>
+        <link src="Wyomind_Core::js/codemirror/codemirror.js"/>
+        <link src="Wyomind_Core::js/codemirror/formatting.js"/>
+        <link src="Wyomind_Core::js/codemirror/active-line.js"/>
+        <link src="Wyomind_Core::js/codemirror/matchbrackets.js"/>
+        <link src="Wyomind_Core::js/codemirror/htmlmixed/htmlmixed.js"/>
+        <link src="Wyomind_Core::js/codemirror/xml/xml.js"/>
+        <link src="Wyomind_Core::js/codemirror/javascript/javascript.js"/>
+        <link src="Wyomind_Core::js/codemirror/css/css.js"/>
+        <link src="Wyomind_Core::js/codemirror/clike/clike.js"/>
+        <link src="Wyomind_Core::js/codemirror/php/php.js"/>
+        <link src="Wyomind_Core::js/codemirror/multiplex/multiplex.js"/>
+        <link src="Wyomind_Core::js/codemirror/embedded.js"/>
+        <link src="Wyomind_Core::js/codemirror/fullscreen.js"/>
+    </head>
+    <body/>
+</page>

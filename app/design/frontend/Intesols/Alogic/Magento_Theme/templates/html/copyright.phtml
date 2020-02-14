@@ -1,0 +1,69 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+?>
+<div class="footer-last">
+<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('copyright')->toHtml();?></span>
+
+<!--a href="<?php $storeManager->getStore()->getBaseUrl(); ?>privacy-policy" title="Privacy Policy">Privacy Policy</a> | 
+<a href="<?php $storeManager->getStore()->getBaseUrl(); ?>terms-conditions" title="Terms and Conditions">Terms and Conditions</a> |
+<a href="<?php $storeManager->getStore()->getBaseUrl(); ?>return-policy" title="Returns Policy">Returns Policy</a> |
+<a href="<?php $storeManager->getStore()->getBaseUrl(); ?>shipping-policy" title="Shipping Policy">Shipping Policy</a -->
+<?php //echo $this->getLayout()->createBlock("Magento\Store\Block\Switcher")->setTemplate("Magento_Store::switch/languages.phtml")->toHtml(); ?>
+</div>
+
+<script>
+require([
+		'jquery'
+	], function ($) {
+		jQuery(document).ready( function() {
+			createSticky(jQuery(".page-header"));								
+	  });
+		function createSticky(sticky) {
+	
+	if (typeof sticky !== "undefined") {
+
+		var	pos = sticky.offset().top,
+				win = jQuery(window);
+			
+		win.on("scroll", function() {
+    		win.scrollTop() >= 10 ? sticky.addClass("fixed") : sticky.removeClass("fixed");      
+		});			
+	}
+}	
+	});					
+</script>
+<style>
+.fixed {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff !important;
+    
+}
+/*@media screen and (max-width: 1024px) {
+.fixed {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff !important;
+    
+}
+header.page-header.fixed + .category-view {
+    margin-top: 70px;
+}
+.category-view{margin-top: 0px;}
+}
+@media screen and (max-width: 767px) {
+    header.page-header.fixed + .category-view {
+    margin-top: 58px;
+}
+.fixed {
+    border-bottom: 1px solid #d4d4d4;
+}
+}*/
+</style>

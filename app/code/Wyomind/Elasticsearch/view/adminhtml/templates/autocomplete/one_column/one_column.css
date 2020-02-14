@@ -1,0 +1,15 @@
+div#search_autocomplete ul.wyomind li.qs-section {
+    background:none;
+}
+
+div#search_autocomplete ul.wyomind li.qs-section:not(:first-child) {
+    margin-top:30px;
+}
+
+div#search_autocomplete span.no-result {
+    display:none;
+}
+
+div#search_autocomplete:not(.no-result) ul.wyomind li {
+    border: 0px;
+}

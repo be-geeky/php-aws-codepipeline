@@ -1,0 +1,208 @@
+<?php
+die("testttt");
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Template for displaying products list widget
+ *
+ * @var $block \Magento\CatalogWidget\Block\Product\ProductsList
+ */
+ 
+ 
+ $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
+/** Apply filters here */
+ $collection = $productCollection->addAttributeToSelect('*')->addAttributeToFilter('is_featured_product', 1)->setPageSize(10)->setCurPage(1)->load();
+ $image = 'category_page_list';
+ $store = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore();
+
+?>
+
+
+     <div id="owl-demo-fe" class="owl-carousel subcat-pros">
+      <?php $count=0; foreach ($collection as $product) {
+          $count++;
+          if ($count <= 15) { ?>
+              <div class="subcat-pro item">
+                  <?php $productImage = $product->getImage($product, 'new_products_content_widget_grid'); ?>
+
+                  <div class="search-product-image">
+                      <a href="<?php /* @escapeNotVerified */
+                      echo $product->getProductUrl() ?>" class="product photo product-item-photo"
+                         tabindex="-1">
+                          <img src="<?php echo $imageUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $productImage; ?>"/>
+                      </a>
+                  </div>
+                  <div class="ptitle">
+                      <a href="<?php /* @escapeNotVerified */
+                      echo $product->getProductUrl() ?>" class="ptext" tabindex="-1">
+                          <?php echo $product->getName(); ?>
+                      </a>
+                  </div>
+                  <div class="cate-pro-price">
+                      <?php
+                      $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+                      $p = $product->getFinalPrice();
+                      echo $formattedPrice = $priceHelper->currency($p, true, false);
+
+                      ?></div>
+
+                  <?php
+
+
+                  echo $block->getProductDetailsHtml($product); ?>
+
+                  <div class="field qty">
+                      <label class="label" for="qty"><span><?php /* @escapeNotVerified */
+                              echo __('Qty') ?></span></label>
+                      <div class="control">
+                          <input type="number"
+                                 name="qty"
+                                 id="qty"
+                                 maxlength="12"
+                                 value="1"
+                                 title="<?php /* @escapeNotVerified */
+                                 echo __('Qty') ?>" class="input-text qty"
+                                 data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                          />
+                      </div>
+                  </div>
+                  <div class="actions-primary">
+                      <?php if ($product->isSaleable()): ?>
+                          <?php if ($product->getTypeInstance()->hasRequiredOptions($product)): ?>
+                              <button class="action tocart primary"
+                                      data-mage-init='{"redirectUrl":{"url":"<?php /* @escapeNotVerified */
+                                      echo $block->getAddToCartUrl($product) ?>"}}'
+                                      type="button" title="<?php /* @escapeNotVerified */
+                              echo __('Add to Cart') ?>">
+                                  <span><?php /* @escapeNotVerified */
+                                      echo __('Add to Cart') ?></span>
+                              </button>
+                          <?php else: ?>
+                              <?php
+                              $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+                              $postData = $postDataHelper->getPostData($block->getAddToCartUrl($product), ['product' => $product->getEntityId()])
+                              ?>
+                              <button class="action tocart primary"
+                                      data-post='<?php /* @escapeNotVerified */
+                                      echo $postData; ?>'
+                                      type="button" title="<?php /* @escapeNotVerified */
+                              echo __('Add to Cart') ?>">
+                                  <span><?php /* @escapeNotVerified */
+                                      echo __('Add to Cart') ?></span>
+                              </button>
+                          <?php endif; ?>
+                      <?php else: ?>
+                          <?php if ($product->getIsSalable()): ?>
+                              <div class="stock available"><span><?php /* @escapeNotVerified */
+                                      echo __('In stock') ?></span></div>
+                          <?php else: ?>
+                              <div class="stock unavailable"><span><?php /* @escapeNotVerified */
+                                      echo __('Out of stock') ?></span></div>
+                          <?php endif; ?>
+                      <?php endif; ?>
+                  </div>
+
+                  <div class="psku">
+                      <?php
+                      $barcode = "";
+                      if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                          $_children = $product->getTypeInstance()->getUsedProducts($product);
+                          foreach ($_children as $child) {
+                              $barcode = $child->getBarcodeEan();
+                              $sku = $child->getSku();
+                              break;
+                          }
+                      } else {
+                          $barcode = $product->getBarcodeEan();
+                          $sku = $product->getSku();
+                      }
+                      echo $sku ?> </div>
+
+              </div>
+          <?php }
+      } ?>
+	  </div>
+	   <div class="customNavigation">
+                        <a class="btn prev-fe"><i class="fa fa-chevron-circle-left"
+                                                                       aria-hidden="true"></i></a>
+                        <a class="btn next-fe"><i class="fa fa-chevron-circle-right"
+                                                                       aria-hidden="true"></i></a>
+                    </div>
+<script>
+
+jQuery(document).ready(function () {
+				var d = jQuery('.ves-inner.container').width();
+				jQuery('#owl-demo-fe').css('width',d+'px');
+                if(d <= 480)
+                            { var p = d - 20;
+                                jQuery('#owl-demo-fe').css('width',p+'px');
+                                jQuery('#owl-demo-fe').css('margin','0 auto');
+                            } else {
+                                jQuery('#owl-demo-fe').css('width',d+'px');    
+                            }
+
+			jQuery("#owl-demo-fe").owlCarousel({
+            loop:true,
+			nav:false,
+			dots: false,		
+            margin:50,
+			pagination : false,
+            responsiveClass:true,
+
+          responsive: {
+                        0: {
+                            items: 1,
+                            nav: true,
+                            margin:50
+                            
+                        },
+                        480: {
+                            items: 2,
+                            nav: true
+                        },
+						768: {
+                            items: 2,
+                            nav: false
+                        },
+                        1024: {
+                            items: 3,
+                            nav: false
+                        },
+                        1199: {
+                            items: 4,
+                            nav: true,
+                            loop: false
+                        }
+                    }
+		});
+				jQuery(".next-fe").click(function (e) {
+                    jQuery("#owl-demo-fe").trigger('next.owl.carousel');                    
+                });
+                jQuery(".prev-fe").click(function (e) {                    
+                    jQuery("#owl-demo-fe").trigger('prev.owl.carousel');
+                });
+
+
+
+		
+});			
+jQuery( window ).resize(function() {
+  			var d = jQuery('.ves-inner.container').width();
+            if(d <= 320)
+                { var p = d - 20;
+                    jQuery('#owl-demo-fe').css('width',p+'px');
+                } else {
+                    jQuery('#owl-demo-fe').css('width',d+'px');    
+                }
+				
+});	
+</script>

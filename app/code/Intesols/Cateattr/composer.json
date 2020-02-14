@@ -1,0 +1,24 @@
+{
+    "name": "intesols/cateattr",
+    "description": "This is a module for categoryAttribute.",
+    "authors": [
+        {
+            "email": "info@mage2gen.com",
+            "name": "Mage2Gen"
+        },
+        {
+            "email": "jay.parmar@intesols.com.au",
+            "name": "Jaydipsinh Parmar"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Intesols\\Cateattr\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}

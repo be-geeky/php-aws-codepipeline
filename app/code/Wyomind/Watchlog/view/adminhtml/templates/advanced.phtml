@@ -1,0 +1,29 @@
+<?php
+echo $block->getLayout()->createBlock('\Wyomind\Watchlog\Block\Adminhtml\Chart')->toHtml();
+?>
+
+<div class="content-header">
+    <table cellspacing="0" style="width:50%; float:left">
+        <tbody><tr>
+                <td style="width:50%;"><h3 class="icon-head head-adminhtml-watchlog">
+                        <?php if ($block->watchlogHelper->getDefaultConfig("watchlog/settings/history") != 0): ?>
+                            <?php echo __("Details of the last") . " " . $block->watchlogHelper->getDefaultConfig("watchlog/settings/history") . " " . __("days"); ?>
+                        <?php else: ?>
+                            <?php echo __("Detailed view"); ?>
+                        <?php endif; ?>
+                    </h3></td>
+                <td class="form-buttons"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button style="float:right" onclick="document.location = '<?php echo $block->getUrl("watchlog/attempts/basic"); ?>'" class="scalable " type="button"><span><span><span><?php echo __("Switch to the detailed view"); ?></span></span></span></button>
+    <?php if ($block->isPeriodicalReportEnabled()) : ?>
+    <button style="float:right; margin-right:5px;" onclick="document.location = '<?php echo $block->getUrl("watchlog/report/send", ['previous'=>'advanced']); ?>'" class="scalable " type="button"><span><span><span><?php echo __("Send the periodical report now"); ?></span></span></span></button>
+    <?php endif; ?>
+    <button style="float:right; margin-right:5px;" onclick="document.location = '<?php echo $block->getUrl("watchlog/history/purge", ['previous'=>'advanced']); ?>'" class="scalable " type="button"><span><span><span><?php echo __("Purge history now"); ?></span></span></span></button>
+    
+</div>
+
+<?php
+echo $block->getGridHtml();

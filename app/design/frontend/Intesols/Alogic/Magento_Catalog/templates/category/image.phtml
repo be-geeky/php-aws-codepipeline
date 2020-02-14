@@ -1,0 +1,60 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php
+    $_helper    = $this->helper('Magento\Catalog\Helper\Output');
+    $_category  = $block->getCurrentCategory();
+    $_imgHtml   = '';
+	//$cat_title = "<h1>".$_category->getName()."</h1>";
+	$cat_title = "";
+	//echo "<span style='display:none'>";
+	//print_r($_category->getData());
+	//echo "</span>";
+    //if ($_imgUrl = $_category->getImageUrl()) {
+    if ($_category->getNewImage()) {
+		$_imgUrl   = $block->getUrl('', array('_direct'=>'pub/media/catalog/category/'.$_category->getNewImage()));
+        $_imgHtml = '<div class="category-image parallax" style="background: url(\''.$_imgUrl.'\');"><!--img src="' . $_imgUrl . '" alt="' . $block->escapeHtml($_category->getName()) . '" title="' . $block->escapeHtml($_category->getName()) . '" class="image" /-->'.$cat_title.'</div>';		
+        //$_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+        echo $_imgHtml;
+    }else{
+		$_imgUrl   = $block->getUrl('', array('_direct'=>'pub/media/catalog/category/banner-hdml.jpg'));
+		$_imgHtml = '<div class="category-image parallax" style="background: url(\''.$_imgUrl.'\');"><!--img src="' . $_imgUrl . '" alt="' . $block->escapeHtml($_category->getName()) . '" title="' . $block->escapeHtml($_category->getName()) . '" class="image" /-->'.$cat_title.'</div>';
+		//echo $_imgHtml;
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+	}
+?>
+
+<script>
+    jQuery.fn.getBgImage = function(callback) {
+        var height = 0;
+        var background_image = jQuery(this).css('background-image');
+        if(typeof background_image != 'undefined') {
+            var path = background_image.replace('url', '').replace('(', '').replace(')', '').replace('"', '').replace('"', '');
+        }
+        var tempImg = jQuery('<img />');
+        tempImg.hide(); //hide image
+        tempImg.bind('load', callback);
+        jQuery('body').append(tempImg); // add to DOM before </body>
+        tempImg.attr('src', path);
+        jQuery('#tempImg').remove(); //remove from DOM
+    };
+
+
+    // usage
+    jQuery("#category-image").getBgImage(function() {
+        console.log(jQuery(this).height());
+    });
+</script>

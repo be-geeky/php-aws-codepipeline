@@ -1,0 +1,340 @@
+/******************************************************************************/
+/* Large screen size                                                         */
+/******************************************************************************/
+@media (min-width: 1000px) {
+  div#search_autocomplete:not(.auto-size) {
+    width: 900px!important;
+    left: -635px;
+    margin-top: 1px;
+    background: transparent;
+  }
+  div#search_autocomplete div.left {
+    width: 290px;
+    display: inline-block;
+    float: left;
+    margin:5px;
+  }
+  div#search_autocomplete div.left > div {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  div#search_autocomplete div.right {
+    width: 587px; /* -2 px because of the border */
+    display: inline-block;
+    margin:5px;
+  }
+  div#search_autocomplete div.sep {
+    float: left;
+    border-right: 1px solid #c2c2c2;
+    position: absolute;
+    left: 300px;
+    bottom: 5px;
+    top: 17px;
+    width: 1px;
+  }
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-suggests {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-products {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  div#search_autocomplete:not(.auto-size) ul.wyomind {
+    /*min-height:240px;*/
+    list-style-type: none;
+    padding-left: 0;
+    border-top: 1px solid #3399cc;
+    overflow:hidden;
+    background: white;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.products {
+    width:100%;
+  }
+  div#search_autocomplete ul.wyomind li.qs-option.product[role=option] {
+    display: block;
+    margin: 5px;
+    flex: 0 0 calc(50% - 10px); /* 2 columns */
+    padding: 5px;
+    border:none !important;
+    box-sizing: border-box;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.categories {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px !important;
+    bottom: 0px;
+    padding:0px;
+  }
+  div#search_autocomplete span.no-result {
+    padding:15px;
+    font-style:italic;
+    color: #c2c2c2;
+    display:block !important;
+  }
+
+  /* Ultimo support */
+  .central-column div#search_autocomplete:not(.auto-size) {
+    left: -75% !important;
+  }
+  .central-column div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  .header-top .central-column div#search_autocomplete:not(.auto-size) {
+    left: -170% !important;
+  }
+  .left-column div#search_autocomplete:not(.auto-size) {
+    left: 0px !important;
+  }
+  .left-column div#search_autocomplete:before {
+    margin-left: 25% !important;
+  }
+  .right-column div#search_autocomplete:not(.auto-size) {
+    right: 0px !important;
+    left:auto !important;
+  }
+  .right-column div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+  div#search_autocomplete {
+   	box-shadow: none; 
+  }
+
+}
+
+/******************************************************************************/
+/* Medium screen size                                                         */
+/******************************************************************************/
+@media (min-width: 768px) and (max-width: 999px) {
+  div#search_autocomplete:not(.auto-size) {
+    width: 600px!important;
+    left: -335px;
+    margin-top: 1px;
+    background: transparent;
+  }
+  div#search_autocomplete div.left {
+    width: 290px;
+    display: inline-block;
+    float: left;
+    margin:5px;
+  }
+  div#search_autocomplete div.left > div {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  div#search_autocomplete div.right {
+    width: 288px; /* -2 px because of the border */
+    display: inline-block;
+    margin:5px;
+  }
+  div#search_autocomplete div.sep {
+    float: left;
+    border-right: 1px solid #c2c2c2;
+    position: absolute;
+    left: 300px;
+    bottom: 5px;
+    top: 17px;
+    width: 1px;
+  }  
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-suggests {
+    margin-bottom: 100px;
+  }
+  div#search_autocomplete div.block-products {
+    margin-bottom: 20px;
+  }
+  div#search_autocomplete:not(.auto-size) ul.wyomind {
+    /*min-height:240px;*/
+    list-style-type: none;
+    padding-left: 0;
+    border-top: 1px solid #c2c2c2;
+    overflow:hidden;
+    background: white;
+  }
+  div#search_autocomplete ul.wyomind li.qs-option.product[role=option] {
+    display: block;
+    margin: 5px;
+    padding: 5px;
+    border:none !important;
+    box-sizing: border-box;
+  }
+  div#search_autocomplete ul.wyomind li.qs-section.categories {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px !important;
+    bottom: 0px;
+    padding:0px;
+  }
+  div#search_autocomplete span.no-result {
+    padding:15px;
+    font-style:italic;
+    color: #c2c2c2;
+    display:block !important;
+  }
+  div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+
+  
+
+  /* Ultimo support */
+  .central-column div#search_autocomplete:not(.auto-size) {
+    left: -75% !important;
+  }  
+  .central-column div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  .left-column div#search_autocomplete:not(.auto-size) {
+    left: 0px !important;
+  }
+  .left-column div#search_autocomplete:before {
+    margin-left: 25% !important;
+  }
+  .header-top .central-column div#search_autocomplete:not(.auto-size) {
+    left: -170% !important;
+  }
+  .right-column div#search_autocomplete:not(.auto-size) {
+    right: 0px !important;
+    left:auto !important;
+  }  
+  .right-column div#search_autocomplete:before {
+    margin-left: 75% !important;
+  }
+  div#search_autocomplete {
+   	box-shadow: none; 
+  }
+}
+
+/******************************************************************************/
+/* Small screen size                                                         */
+/******************************************************************************/
+@media (max-width: 767px) {
+  div#search_autocomplete div.block-products.no-result,
+  div#search_autocomplete div.block-categories.no-result,
+  div#search_autocomplete div.block-cms.no-result {
+    display:none;
+  }
+  div#search_autocomplete {
+    background: transparent !important;
+    box-shadow: none;
+  }
+  div#search_autocomplete ul.wyomind {
+    display:table; 
+    width:99%;
+    background: white;
+  }
+  div#search_autocomplete div.right {
+    display:table-header-group; 
+  }
+  div#search_autocomplete div.block-products,
+  div#search_autocomplete div.block-suggests,
+  div#search_autocomplete div.block-categories {
+    margin-bottom: 20px;
+  }
+  div#search_autocomplete span.all-results {
+    position:relative !important;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  div#search_autocomplete:before {
+    margin-left: 50% !important;
+  }
+  
+}
+
+
+/******************************************************************************/
+/* All sizes                                                                  */
+/******************************************************************************/
+div#search_autocomplete ul.wyomind li.qs-section {
+  background: #006bb496;
+  text-transform: uppercase;
+  font-weight:bold;
+  color:white;
+}
+div#search_autocomplete ul li .amount {
+  color: white;
+}
+
+div#search_autocomplete span.no-result {
+  display:none;
+}
+div#search_autocomplete:not(.no-result) ul.wyomind li {
+  border: 0px;
+  padding-right:5px;
+}
+div#search_autocomplete ul.wyomind li img {
+  float: left;
+  margin-right: 6px;
+  background-color: #fff;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+div#search_autocomplete ul.wyomind li .qs-option-name {
+  vertical-align: top;
+}
+div#search_autocomplete ul.wyomind li .clearer {
+  clear: both;
+}
+div#search_autocomplete ul.wyomind li a:hover {
+  text-decoration: none;
+}
+div#search_autocomplete div.right span.category {
+  color:black;
+  display:block;
+  font-size:0.8em;
+}
+
+div#search_autocomplete p.old-price {
+  text-decoration: line-through;
+  float:left;
+  margin-right:10px;
+}
+div#search_autocomplete div.price-box {
+  font-size:0.9em;
+}
+div#search_autocomplete span.price-label {
+  color:black;
+}
+div#search_autocomplete p.price-from {
+  margin-bottom:0px;
+}
+div#search_autocomplete div.right span.name {
+  color:black;
+}
+div#search_autocomplete ul:not(:empty) {
+ border: 1px solid #3399cc !important; 
+}
+div#search_autocomplete:before {
+  content: '';
+  width: 0;
+  height: 5px;
+  display: block;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  border-bottom: 7px solid #3399cc;
+  background: transparent;
+  border-top: none;
+  margin-left: 85%;
+  top: -4px;
+}
+div#search_autocomplete:not(.no-result) ul.wyomind li.qs-option {
+    margin: 2px !important;
+}
+div#search_autocomplete span.all-results {
+  right: 10px;
+  margin-top: 10px;
+  bottom: 6px;
+  position: absolute;
+  float: right;
+}
+div#search_autocomplete li.qs-option span.count {
+  float:right;
+}

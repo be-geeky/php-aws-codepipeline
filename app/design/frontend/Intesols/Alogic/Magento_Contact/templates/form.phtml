@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$scopeConfig = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+$config_image = $scopeConfig->getValue('intesolstheme/itcontact/status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$contact_page_image = $config_image ? $block->getUrl().'pub/media/intesolsTheme/contact/'.$config_image:$block->getUrl().'pub/media/magestore/bannerslider/images/4/_/4_port_charger.jpg';
+?>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<div class="about-alogic-container">
+	<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact-us-info')->toHtml();?>
+    <div class="container">	
+<form class="form contact hdmx__contact-form" action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
+      id="contact-form"
+      method="post"
+      data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
+      data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset">
+        <legend class="legend"><h2><?php /* @escapeNotVerified */ echo __('Quick Enquiry Form') ?></h2></legend><br />
+        <div class="field note no-label"><?php /* @escapeNotVerified */ echo __('Need to send us a quick question? Just send it to us by filling out the form.') ?></div>
+        <div class="fields group-3">
+            <div class="field name required">
+            <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Name') ?></span></label>
+            <div class="control">
+                <input name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name') ?: $this->helper('Magento\Contact\Helper\Data')->getUserName()) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+            </div>
+        </div>
+            <div class="field email required">
+            <label class="label" for="email"><span><?php /* @escapeNotVerified */ echo __('Email') ?></span></label>
+            <div class="control">
+                <input name="email" id="email" title="<?php /* @escapeNotVerified */ echo __('Email') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('email') ?: $this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>" class="input-text" type="email" data-validate="{required:true, 'validate-email':true}"/>
+            </div>
+        </div>
+            <div class="field Subject required">
+            <label class="label" for="Subject"><span><?php /* @escapeNotVerified */ echo __('Subject') ?></span></label>
+            <div class="control">
+                <input name="Subject" id="Subject" title="<?php /* @escapeNotVerified */ echo __('Subject') ?>" value="" class="input-text" type="text" />
+            </div>
+        </div>
+        </div>    
+        <!--<div class="field telephone">
+            <label class="label" for="telephone"><span><?php /* @escapeNotVerified */ //echo __('Phone Number') ?></span></label>
+            <div class="control">
+                <input name="telephone" id="telephone" title="<?php /* @escapeNotVerified */ //echo __('Phone Number') ?>" value="<?php //echo $block->escapeHtml(//$this->helper('Magento\Contact\Helper\Data')->getPostValue('telephone')) ?>" class="input-text" type="text" />
+            </div>
+        </div>-->
+		
+        <div class="field comment required">
+            <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Enquiry') ?></span></label>
+            <div class="control">
+                <textarea name="comment" id="comment" title="<?php /* @escapeNotVerified */ echo __('Enquiry') ?>" class="input-text" cols="5" rows="3" data-validate="{required:true}"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('comment')) ?></textarea>
+            </div>
+        </div>
+		<div class="g-recaptcha" data-sitekey="6LdCuw8UAAAAAG94oHQyV8oAo_QRawKBZoLP9xRM"></div>
+        <?php echo $block->getChildHtml('form.additional.info'); ?>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <input type="hidden" name="hideit" id="hideit" value="" />
+            <button type="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit square-yellow">
+                <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+</div>
+    </div>

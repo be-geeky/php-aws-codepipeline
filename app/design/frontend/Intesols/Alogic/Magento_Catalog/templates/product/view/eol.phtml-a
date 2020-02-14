@@ -1,0 +1,19 @@
+<?php
+$barcode = "";
+$_product = $block->getProduct();
+$eol = $_product->getEol();		
+$eolt = $_product->getEolt();		
+if(isset($eolt) && $eolt == 1) { ?>
+<div class="product attribute eol"> 
+    <strong class="type" style="">*This item is End of Life. Alternate products:</strong>  <div class="value"><?php echo $eol; ?></div>
+</div>
+<?php } else {
+if(isset($eol) && !empty($eol)) { 
+?>
+<div class="product attribute eol"> 
+    <strong class="type" style="">*This item is End of Life. Alternate products:</strong>    <div class="value"><?php echo $eol; ?></div>
+</div>
+<?php		
+}
+}
+?> 

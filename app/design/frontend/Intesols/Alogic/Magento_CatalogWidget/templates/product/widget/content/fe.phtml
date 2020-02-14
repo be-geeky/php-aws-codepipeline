@@ -1,0 +1,218 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Template for displaying products list widget
+ *
+ * @var $block \Magento\CatalogWidget\Block\Product\ProductsList
+ */
+ 
+ 
+ $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
+/** Apply filters here */
+ $collection = $productCollection->addAttributeToSelect('*')->addAttributeToFilter('is_featured_product', 1)->load();
+ $image = 'category_page_list';
+ $store = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore();
+ $imageHelper = $this->helper('Magento\Catalog\Helper\Image');
+?>
+
+
+     <div id="owl-demo-fe" class="owl-carousel subcat-pros">
+         <?php $count=0; foreach ($collection as $product) {
+$resizedImage = $imageHelper->init($product, 'new_products_content_widget_grid')
+            ->constrainOnly(true)
+            ->keepAspectRatio(true)
+            ->keepFrame(false)->resize(250, 250)
+            ->setImageFile($product->getImage())
+            ->getUrl();
+             $count++;
+             if ($count <= 15) { ?>
+
+                 <div class="subcat-pro item">
+                     <?php //$productImage = $product->getImage($product, 'new_products_content_widget_grid'); ?>
+		     <?php $productImage = $resizedImage; ?>	
+
+                     <div class="search-product-image">
+                         <a href="<?php /* @escapeNotVerified */
+                         echo $product->getProductUrl() ?>" class="product photo product-item-photo  <?php  echo $product->getResource()->getAttribute('is_featured_product')->getFrontend()->getValue($product).'jayssss'; ?>"
+                            tabindex="-1">
+                             <img src="<?php echo $productImage; ?>"/>
+                         </a>
+                     </div>
+                     <div class="ptitle">
+                         <a href="<?php /* @escapeNotVerified */
+                         echo $product->getProductUrl() ?>" class="ptext" tabindex="-1">
+                             <?php echo $product->getName(); ?><?php echo $product->getIsSale(); ?>
+                         </a>
+                     </div>
+                     <?php if ($product->getData('show_for_sale') == 1) { ?>
+                         <div class="cate-pro-price">
+                             <?php
+                             $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+                             $p = $product->getFinalPrice();
+							 $p = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+                              echo $formattedPrice = $priceHelper->currency($p, true, false);
+							 
+                             ?></div>
+                     <?php } ?>
+                     <?php
+
+
+                     echo $block->getProductDetailsHtml($product); ?>
+
+                     <?php if ($product->getData('show_for_sale') != 1) { ?>
+                         <div class="nocart">
+                             <div class="innocart">
+                                 <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                 <span>Please contact our resellers to purchase this product </span>
+                             </div>
+
+                         </div>
+                     <?php } else { ?>
+                         <a title="Add to Cart" class="action tocart primary"
+                            href="<?php echo $product->getProductUrl() ?>">
+                             <span>View Details</span>
+                         </a>                        
+                     <?php } ?>
+					  <?php //echo $block->getReviewsSummaryHtml($product, "sort", true); ?>
+                     <div class="psku">
+                         <?php
+                         $barcode = "";
+                         if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                             $_children = $product->getTypeInstance()->getUsedProducts($product);
+                             foreach ($_children as $child) {
+                                 $barcode = $child->getBarcodeEan();
+                                 $sku = $child->getSku();
+                                 break;
+                             }
+                         } else {
+                             $barcode = $product->getBarcodeEan();
+                             $sku = $product->getSku();
+                         }
+                         echo $sku; ?> </div>
+
+                 </div>
+             <?php }
+         } ?>
+	  </div>
+	   <div class="customNavigation">
+                        <a class="btn prev-fe"><i class="fa fa-chevron-circle-left"
+                                                                       aria-hidden="true"></i></a>
+                        <a class="btn next-fe"><i class="fa fa-chevron-circle-right"
+                                                                       aria-hidden="true"></i></a>
+                    </div>
+<script>
+
+jQuery(document).ready(function () {
+				var d = jQuery('.ves-inner.container').width();
+				jQuery('#owl-demo-fe').css('width',d+'px');
+                if(d <= 480)
+                            { var p = d - 20;
+                                jQuery('#owl-demo-fe').css('width',p+'px');
+                                jQuery('#owl-demo-fe').css('margin','0 auto');
+                            } else {
+                                jQuery('#owl-demo-fe').css('width',d+'px');    
+                            }
+
+			jQuery("#owl-demo-fe").owlCarousel({
+            loop:true,
+			nav:false,
+			dots: false,		
+            margin:50,
+			pagination : false,
+            responsiveClass:true,
+
+          responsive: {
+                        0: {
+                            items: 1,
+                            nav: true,
+                            margin:50
+                            
+                        },
+                        480: {
+                            items: 2,
+                            nav: true
+                        },
+						768: {
+                            items: 2,
+                            nav: false
+                        },
+                        1024: {
+                            items: 3,
+                            nav: false
+                        },
+                        1199: {
+                            items: 4,
+                            nav: true,
+                            loop: false
+                        }
+                    }
+		});
+				jQuery(".next-fe").click(function (e) {
+                    jQuery("#owl-demo-fe").trigger('next.owl.carousel');                    
+                });
+                jQuery(".prev-fe").click(function (e) {                    
+                    jQuery("#owl-demo-fe").trigger('prev.owl.carousel');
+                });
+
+
+
+		
+});			
+jQuery( window ).resize(function() {
+  			var d = jQuery('.ves-inner.container').width();
+            if(d <= 320)
+                { var p = d - 20;
+                    jQuery('#owl-demo-fe').css('width',p+'px');
+                } else {
+                    jQuery('#owl-demo-fe').css('width',d+'px');    
+                }
+				
+});	
+</script>
+
+<script>
+    jQuery(window).load(function () {
+        setTimeout(function () {
+            var dp = 0;
+            jQuery("#owl-demo-fe .owl-item").each(function () {
+				jQuery('#owl-demo-fe .owl-item').css('height', '');
+                var hs = jQuery(this).height();
+                if (hs > dp) {
+                    dp = hs;
+                }
+            });
+
+            var msss = dp + parseInt(19);
+
+            jQuery('#owl-demo-fe .owl-item').css('height', msss + 'px');
+			console.log('onload');
+        }, 3000);
+
+
+    });
+
+    jQuery(window).resize(function () {
+
+        var dp = 0;
+        jQuery("#owl-demo-fe .owl-item").each(function () {
+			jQuery('#owl-demo-fe .owl-item').css('height', '');
+            var hs = jQuery(this).height();
+            if (hs > dp) {
+                dp = hs;
+            }
+        });
+        var msss = dp + parseInt(19);
+        jQuery('#owl-demo-fe .owl-item').css('height', dp + 'px');
+			console.log('onresize');
+    });
+</script>

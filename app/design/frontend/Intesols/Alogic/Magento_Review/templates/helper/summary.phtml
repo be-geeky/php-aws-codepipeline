@@ -1,0 +1,67 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php $url = $block->getReviewsUrl() . '#reviews'; ?>
+<?php $urlForm = $block->getReviewsUrl() . '#review-form'; ?>
+<?php if ($block->getReviewsCount()): ?>
+    <?php $rating = $block->getRatingSummary(); ?>
+    <div class="product-reviews-summary<?php echo !$rating ? ' no-rating' : ''?>" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+        <?php if ($rating):?>
+            <div class="rating-summary">
+                <span class="label"><span><?php /* @escapeNotVerified */ echo __('Rating') ?>:</span></span>
+                <div class="rating-result" title="<?php /* @escapeNotVerified */ echo $rating; ?>%">
+                    <span style="width:<?php /* @escapeNotVerified */ echo $rating; ?>%"><span><span itemprop="ratingValue"><?php /* @escapeNotVerified */ echo $rating; ?></span>% of <span itemprop="bestRating">100</span></span></span>
+                </div>
+            </div>
+        <?php endif;?>
+        <div class="reviews-actions">
+            <a class="action view" href="<?php /* @escapeNotVerified */ echo $url ?>"><span itemprop="reviewCount"><?php /* @escapeNotVerified */ echo $block->getReviewsCount() ?></span>&nbsp;<span><?php /* @escapeNotVerified */ echo($block->getReviewsCount() == 1) ? __('Review') : __('Reviews') ?></span></a>
+            <a class="action add" href="<?php /* @escapeNotVerified */ echo $urlForm ?>"><?php /* @escapeNotVerified */ echo __('Add Your Review') ?></a>
+        </div>
+    </div>
+<?php elseif ($block->getDisplayIfEmpty()): ?>
+    <div class="product-reviews-summary empty">
+        <div class="reviews-actions">
+            <?php
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+            /* Get base url with index When index.php enable at Url */
+            $baseUrl = $storeManager->getStore()->getBaseUrl();
+            /* Result  http://www.example.com/ or http://www.example.com/index.php  depends SEo rewite settng*/
+            /* it always give the URL without Index.php either index.php enable for Url */
+            $baseUrlWithOutIndexPhp = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+            // $baseUrl  result = http://example.com/
+
+            /* It is give url with index.php whenever  seo rewrite not enable mean when  Index.php show at Url  */
+
+            $linkUrl= $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
+
+            /* $linkUrl  result = http://example.com/index.php/
+            whenever  seo rewrite not enable mean when  Index.php show at Url
+
+            but when  SEO Rewrite enabled
+
+            Then it show result = http://example.com/
+
+            */
+
+            $statiContenteUrl =$storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+            /* Result $statiContenteUrl = http://example.com/pub/static/version1507042743/
+             In this part  version1507042743 is 1507042743 static content version which dynamcically created
+            */
+
+            $mediaUrl =  $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+            ?>
+            <a class="action add" href="<?php /* @escapeNotVerified */ echo $urlForm; ?>">
+                <img src="<?php echo $mediaUrl; ?>gstar.png" height="auto" width="auto" />
+            </a>
+        </div>
+    </div>
+<?php endif; ?>

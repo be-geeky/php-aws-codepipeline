@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Wyomind\Elasticsearch\Autocomplete\Config\HandlerInterface" type="Wyomind\Elasticsearch\Autocomplete\Config\JsonHandler" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\AdapterInterface" type="Wyomind\Elasticsearch\Helper\Config" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\AutocompleteInterface" type="Wyomind\Elasticsearch\Helper\Autocomplete" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\ClientInterface" type="Wyomind\Elasticsearch\Helper\Config" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\QueryInterface" type="Wyomind\Elasticsearch\Helper\Config" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\CategoryInterface" type="Wyomind\Elasticsearch\Helper\Category" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\SearchInterface" type="Wyomind\Elasticsearch\Helper\Search" />
+    <preference for="Wyomind\Elasticsearch\Helper\Interfaces\IndexerInterface" type="Wyomind\Elasticsearch\Helper\Indexer" />
+    <preference for="Wyomind\Elasticsearch\Model\ClientInterface" type="Wyomind\Elasticsearch\Model\Client" />
+    <preference for="Wyomind\Elasticsearch\Model\Client\ConfigInterface" type="Wyomind\Elasticsearch\Model\Client\Config" />
+    <preference for="Wyomind\Elasticsearch\Model\AdapterInterface" type="Wyomind\Elasticsearch\Model\Adapter" />
+    <preference for="Wyomind\Elasticsearch\Model\DocumentsBuilderInterface" type="Wyomind\Elasticsearch\Model\DocumentsBuilder" />
+    <preference for="Wyomind\Elasticsearch\Model\QueryBuilderInterface" type="Wyomind\Elasticsearch\Model\QueryBuilder" />
+    <preference for="Wyomind\Elasticsearch\Model\Index\MappingBuilderInterface" type="Wyomind\Elasticsearch\Model\Index\MappingBuilder" />
+    
+    <preference for="Magento\CatalogSearch\Model\Indexer\Fulltext\Store" type="Wyomind\Elasticsearch\Model\Indexer\Fulltext\Store" />
+
+    <type name="Wyomind\Elasticsearch\Helper\Search">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">quick_search_container</argument>
+        </arguments>
+    </type>
+    <type name="Wyomind\Elasticsearch\Model\Indexer\Product">
+        <arguments>
+            <argument name="type" xsi:type="string">product</argument>
+        </arguments>
+    </type>
+    <type name="Wyomind\Elasticsearch\Model\Indexer\Category">
+        <arguments>
+            <argument name="type" xsi:type="string">category</argument>
+        </arguments>
+    </type>
+    <type name="Wyomind\Elasticsearch\Model\Indexer\Cms">
+        <arguments>
+            <argument name="type" xsi:type="string">cms</argument>
+        </arguments>
+    </type>
+    <type name="Wyomind\Elasticsearch\Model\Index\MappingBuilder">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="product" xsi:type="string">Wyomind\Elasticsearch\Model\Index\Type\Product</item>
+                <item name="category" xsi:type="string">Wyomind\Elasticsearch\Model\Index\Type\Category</item>
+                <item name="cms" xsi:type="string">Wyomind\Elasticsearch\Model\Index\Type\Cms</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Search\Model\Adminhtml\System\Config\Source\Engine">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Elasticsearch</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Search\Model\AdapterFactory">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Wyomind\Elasticsearch\Model\Adapter</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Model\Indexer\IndexerHandlerFactory">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Wyomind\Elasticsearch\Model\Indexer\IndexerHandler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Search\Dynamic\IntervalFactory">
+        <arguments>
+            <argument name="intervals" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Magento\Framework\Search\Adapter\Mysql\Aggregation\Interval</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Search\Dynamic\DataProviderFactory">
+        <arguments>
+            <argument name="dataProviders" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Magento\CatalogSearch\Model\Adapter\Mysql\Dynamic\DataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\EngineProvider">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item name="elasticsearch" xsi:type="string">Magento\CatalogSearch\Model\ResourceModel\Engine</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <!--COMMAND LINE--> 
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="wyomind_elasticsearch_update_server_version" xsi:type="object">Wyomind\Elasticsearch\Console\Command\UpdateServerVersion</item>
+                <item name="wyomind_elasticsearch_update_config" xsi:type="object">Wyomind\Elasticsearch\Console\Command\UpdateConfig</item>
+                <item name="wyomind_elasticsearch_search" xsi:type="object">Wyomind\Elasticsearch\Console\Command\Search</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    
+    
+    <!-- PLUGIN TO USE THE GOOD INDEXER -->
+    <type name="Magento\Indexer\Model\Indexer">
+        <plugin name="wyomind_elasticsearch_plugin_indexer_model_indexer" 
+                type="Wyomind\Elasticsearch\Plugin\Indexer\Model\Indexer" />
+    </type>
+    
+    
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+        <plugin name="wyomind_elasticsearch_plugin_catalogsearch_model_resourcemodel_fulltext_collection" 
+                type="Wyomind\Elasticsearch\Plugin\CatalogSearch\Model\ResourceModel\Fulltext\Collection" />
+    </type>
+    
+</config>

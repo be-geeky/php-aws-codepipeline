@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="catalogsearch_fulltext" view_id="catalogsearch_fulltext" class="Wyomind\Elasticsearch\Model\Indexer\Product">
+        <title translate="true">Elasticsearch Index</title>
+        <description translate="true">Rebuild Elasticsearch index</description>
+    </indexer>
+</config>

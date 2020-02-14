@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <move element="page.main.title" destination="product.info.main" before="-"/>
+		<move element="product.info.sku" destination="product.info.main" after="page.main.title"/>
+		<move element="product.info.overview" destination="product.info.main" after="product.info.sku"/>        
+        <move element="product.info.review" destination="product.info.main" before="product.info.price"/>
+		<referenceContainer name="content">
+			<referenceContainer name="product.info.main">
+				<block class="\Magento\Framework\View\Element\Template" name="product.info.barcode" template="product/view/barcode.phtml" after="product.info.sku"/>
+			</referenceContainer>
+			<block class="\Magento\Catalog\Block\Product\View\Attributes" name="product.reseller.distributer" template="product/view/rd.phtml" after="product.info.media"/>
+			<!--<block class="Magento\Catalog\Block\Product\View\Description" name="product.info.details" template="product/view/details.phtml" after="product.info.media">
+				<block class="Magento\Catalog\Block\Product\View\Description" name="product.info.description" template="product/view/attribute.phtml" group="detailed_info">
+					<arguments>
+						<argument name="at_call" xsi:type="string">getDescription</argument>
+						<argument name="at_code" xsi:type="string">description</argument>
+						<argument name="css_class" xsi:type="string">description</argument>
+						<argument name="at_label" xsi:type="string">none</argument>
+						<argument name="title" translate="true" xsi:type="string">Details</argument>
+					</arguments>
+				</block>
+				<block class="Magento\Catalog\Block\Product\View\Attributes" name="product.attributes" as="additional" template="product/view/attributes.phtml" group="detailed_info">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">More Information</argument>
+					</arguments>
+				</block>
+				<block class="Magento\Catalog\Block\Product\View" name="warrantyinfo.tab" as="warrantyinfo" template="product/view/rd.phtml" group="detailed_info" >
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">Warranty Information</argument>
+					</arguments>
+				</block>
+			</block>-->
+			<block class="\Magento\Catalog\Block\Product\View\Attributes" name="product.reseller.distributer.new" template="product/view/rdNew.phtml" after="product.reseller.distributer"/>	
+		</referenceContainer>		
+		<!--<referenceBlock name="product.info.details">
+            <block class="Magento\Catalog\Block\Product\View\Attributes" name="overview.tab" template="product/view/overview.phtml" group="detailed_info" >
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Overview</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Catalog\Block\Product\View\Attributes" name="specification.tab" template="product/view/specification.phtml" group="detailed_info" >
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Specification</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Catalog\Block\Product\View\Attributes" name="connection.tab" template="product/view/connection.phtml" group="detailed_info" >
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Connection Guides</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Catalog\Block\Product\View\Attributes" name="downloads.tab" template="product/view/downloads.phtml" group="detailed_info" >
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Downloads</argument>
+                </arguments>
+            </block>
+        </referenceBlock>-->
+		<referenceBlock name="reviews.tab" remove="true"/>
+		<referenceBlock name="product.info.description" remove="true"/>
+		<referenceBlock name="product.attributes" remove="true"/>
+		<referenceBlock name="product.info.review" remove="true"/>
+		<referenceBlock name="product.price.final" remove="true"/>
+		<referenceBlock name="product.info.social" remove="true"/>
+		<referenceBlock name="product.info.details" remove="true"/>
+    </body>
+</page>

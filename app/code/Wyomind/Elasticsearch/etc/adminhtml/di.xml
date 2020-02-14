@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+  Copyright © 2018 Wyomind. All rights reserved.
+  See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+        
+    <type name="Magento\Config\Model\Config">
+        <plugin name="wyomind_elasticsearch_plugin_config_model_config" 
+                type="Wyomind\Elasticsearch\Plugin\Config\Model\Config" />
+    </type>
+    
+</config>

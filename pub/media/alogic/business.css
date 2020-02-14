@@ -1,0 +1,45 @@
+.menu > ul > li > ul > li > a:hover,
+.level1.submenu a:hover,
+.c-sidebar .expand, .c-sidebar .expanded,
+.breadcrumbs strong,
+.breadcrumbs .item:not(:last-child):after,
+.subcat-view .subcat-data .subcat-des .subcat-des-btn a > i.fa , 
+.block-promo .title, .rd .rd-que .rd-titel::after, .footer-last a:hover, .page-footer h4, .footer.content .links a:hover,
+.minicart-wrapper .head-login i:hover, .c-sidebar .o-list li.level0 > a.active, .c-sidebar .o-list a.is-active,
+.subcat-view .cate-pro-des > a, .subcat-view .cate-pro-des > a .cate-pro-action i.fa{color: #4380ae}
+ 
+.rd .rd-que li.active .rd-titel, .rd .rd-que li .rd-titel:hover,
+.all-location,
+.product.info.detailed .product-tab-titels .product-tab-titel:hover, 
+.product.info.detailed .product-tab-titels .product-tab-titel.active,
+.subcat-view .product-item-details:hover{background-color: #4380ae;}
+
+.subcat-view .product-item-details:hover .product-item-name > a{color: #fff;}
+
+.swatch-option.text.selected{background-color: #4380ae !important;}
+
+.rd .rd-que .rd-titel img, 
+.info-sec .info-sec-des .left-content img,
+.fotorama__thumb-border { border-color: #4380ae;}
+
+.flex-control-paging li a:hover,
+.flex-control-paging li a.flex-active {  background-color: #b5c9d7 !important;}
+
+.menu > ul > li > a:hover > span, .navigation .level0 > .level-top.ui-state-focus > span, .navigation .level0.active > .level-top, .navigation .level0.has-active- > .level-top {
+    background: rgba(0, 0, 0, 0) url("images/blue/hover-ul.png") repeat-x scroll center bottom;
+}
+
+.page-header {background: rgba(0, 0, 0, 0) url("images/blue/header-strip.png") repeat-x scroll center bottom;}
+.minicart-wrapper .action.showcart:hover:before, .minicart-wrapper .action.showcart.active:before {background-image: url("images/blue/icon-cart-h.png"); content: "";}
+
+.action.primary {background: #b1b1b1; border: 1px solid #b1b1b1; color: #fff}
+.action.primary:hover {background: #a9a9a9; border: 1px solid #a9a9a9;}
+.more-button a {background-color:#4380ae; color: #fff}
+
+
+
+.page-footer {background: #b1b1b1 none repeat scroll 0 0;}
+
+.c-sidebar .o-list li > ul{ margin-left: -18px;}
+
+

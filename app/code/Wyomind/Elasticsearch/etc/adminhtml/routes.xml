@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="catalog">
+            <module name="Wyomind_Elasticsearch" before="Magento_Catalog" />
+        </route>
+        <route id="elasticsearch" frontName="elasticsearch">
+            <module name="Wyomind_Elasticsearch" />
+        </route>
+    </router>
+</config>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Intesols_Distributor::distributor_manager" title="Intesols Extension" module="Intesols_Distributor" sortOrder="11" resource="Intesols_Distributor::distributor_manager"/>
+        <add id="Intesols_Distributor::add_row" title="Reseller and Distributor Manager" module="Intesols_Distributor" sortOrder="20" parent="Intesols_Distributor::distributor_manager" action="distributor/grid" resource="Intesols_Distributor::add_row"/>
+		
+    </menu>
+</config>

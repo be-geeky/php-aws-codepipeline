@@ -1,0 +1,10 @@
+<?php $_product = $block->getProduct() ?>
+<div class="specification">
+<div class="part_no_main speci-row"><span class="part_no speci-que">Part No.</span><span class="part_no_value speci-ans"><?php echo $_product->getSku(); ?></span></div>
+<div class="user_interface_main speci-row"><span class="user_interface speci-que">User Interface:</span><span class="user_interface_value speci-ans"><?php echo $_product->getUserInterface(); ?></span></div>
+<div class="power_main speci-row"><span class="power speci-que">Power:</span><span class="power_value speci-ans"><?php echo $_product->getPower(); ?></span></div>
+<div class="data_rate_main speci-row"><span class="data_rate speci-que">Data Rate:</span><span class="data_rate_value speci-ans"><?php echo $_product->getDataRate(); ?></span></div>
+<div class="compliance_main speci-row"><span class="compliance speci-que">Compliance:</span><span class="compliance_value speci-ans"><?php echo $_product->getCompliance(); ?></span></div>
+<div class="physical_characteristics_main speci-row"><span class="physical_characteristics speci-que">Physical Characteristics:</span><span class="physical_characteristics_value speci-ans"><?php echo $_product->getPhysicalCharacteristics(); ?></span></div>
+<div class="system_requirement_main speci-row"><span class="system_requirement speci-que">System Requirement:</span><span class="system_requirement_value speci-ans"><?php echo $_product->getSystemRequirement(); ?></span></div>
+</div>

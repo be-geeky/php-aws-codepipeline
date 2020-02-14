@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php //if ($_description = $block->getCurrentCategory()->getDescription()): ?>
+    <!--<div class="category-description">
+        <?php /* @escapeNotVerified */ //echo $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute($block->getCurrentCategory(), $_description, 'description') ?>
+    </div>-->
+<?php //endif; ?>
+<?php 
+	if($block->getCurrentCategory()->getNewImage()){ $ele_att = 'class="cat-image-head"'; }else{ $ele_att =  'class="cat-image-head without-img" style="position:relative"'; }
+	echo '<div '.$ele_att.'><h1>'.$block->getCurrentCategory()->getName().'</h1>';
+	if($block->getCurrentCategory()->getNewHeading()){
+		// '<span>'.$block->getCurrentCategory()->getNewHeading().'</span>'; 
+	}
+	echo '</div>';
+?>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Backend\Model\Auth">
+        <plugin name="watchlog_login"  type="Wyomind\Watchlog\Model\Auth" sortOrder="1"/>
+    </type>
+</config>

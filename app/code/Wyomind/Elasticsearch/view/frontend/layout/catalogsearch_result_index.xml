@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="columns.top">
+            <block class="Wyomind\Elasticsearch\Block\Search\DoYouMean" name="elasticsearch.result.doyoumean" after="page.main.title" template="Wyomind_Elasticsearch::result/doyoumean.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="sidebar.additional">
+            <block class="Wyomind\Elasticsearch\Block\Search\Cms" name="elasticsearch.result.cms" before="-" template="Wyomind_Elasticsearch::result/cms.phtml"/>
+            <block class="Wyomind\Elasticsearch\Block\Search\Category" name="elasticsearch.result.category" before="-" template="Wyomind_Elasticsearch::result/category.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

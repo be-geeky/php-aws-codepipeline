@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php 
+$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+ 
+$request = $objectManager->get('\Magento\Framework\App\Request\Http');
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$currentStore = $storeManager->getStore();
+if ($request->getFullActionName() == 'catalog_product_view') {
+$registry = $objectManager->get('\Magento\Framework\Registry');
+$currentCategory = $registry->registry('current_category');
+
+if(!empty($currentCategory)) {
+?>
+<div class="ptoptitle">
+	<a href="<?php echo $currentCategory->getUrl(); ?>"><?php echo $currentCategory->getName(); ?></a>
+</div>
+
+<?php } } ?>
+<?php if ($crumbs && is_array($crumbs)) : ?>
+<div class="breadcrumbs">
+    <ul class="items">
+        <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+            <li class="item <?php /* @escapeNotVerified */ echo $crumbName ?>">
+            <?php if ($crumbInfo['link']) : ?>
+                <a href="<?php /* @escapeNotVerified */ echo $crumbInfo['link'] ?>" title="<?php echo $block->escapeHtml($crumbInfo['title']) ?>">
+                    <?php echo $block->escapeHtml($crumbInfo['label']) ?>
+                </a>
+            <?php elseif ($crumbInfo['last']) : ?>
+                <strong><?php echo $block->escapeHtml($crumbInfo['label']) ?></strong>
+            <?php else: ?>
+                <?php echo $block->escapeHtml($crumbInfo['label']) ?>
+            <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+</div>
+<?php endif; ?>

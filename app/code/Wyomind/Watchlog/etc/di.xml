@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    
+    <!-- cron process -->
+    <type name="Wyomind\Watchlog\Logger\HandlerCron">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    
+    <type name="Wyomind\Watchlog\Logger\LoggerCron">
+        <arguments>
+            <argument name="name" xsi:type="string">WL-CRON</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="watchlogcron" xsi:type="object">Wyomind\Watchlog\Logger\HandlerCron</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

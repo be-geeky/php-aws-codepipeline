@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Wyomind. All rights reserved.
+ * https://www.wyomind.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="wyomind_elasticsearch_full_product_reindex_after">
+        <observer name="wyomind_elasticsearch_full_product_reindex_after_category" instance="Wyomind\Elasticsearch\Observer\Category\ReindexAll" />
+        <observer name="wyomind_elasticsearch_full_product_reindex_after_cms" instance="Wyomind\Elasticsearch\Observer\Cms\ReindexAll" />
+    </event>
+    <event name="catalog_category_save_after">
+        <observer name="wyomind_elasticsearch_catalog_category_save_after" instance="Wyomind\Elasticsearch\Observer\Category\Reindex" />
+    </event>
+    <event name="catalog_category_delete_after">
+        <observer name="wyomind_elasticsearch_catalog_category_delete_after" instance="Wyomind\Elasticsearch\Observer\Category\Delete" />
+    </event>
+    <event name="cms_page_save_after">
+        <observer name="wyomind_elasticsearch_cms_page_save_after" instance="Wyomind\Elasticsearch\Observer\Cms\Reindex" />
+    </event>
+    <event name="cms_page_delete_after">
+        <observer name="wyomind_elasticsearch_cms_page_delete_after" instance="Wyomind\Elasticsearch\Observer\Cms\Delete" />
+    </event>
+    <event name="admin_system_config_changed_section_catalog">
+        <observer name="wyomind_elasticsearch_admin_system_config_changed_section_catalog" instance="Wyomind\Elasticsearch\Observer\Config\Save" />
+    </event>
+    <event name="admin_system_config_changed_section_elasticsearch">
+        <observer name="wyomind_elasticsearch_admin_system_config_changed_section_elasticsearch" instance="Wyomind\Elasticsearch\Observer\Config\Save" />
+    </event>
+    <event name="catalog_product_save_after">
+        <observer name="wyomind_elasticsearch_catalog_product_save_after" instance="Wyomind\Elasticsearch\Observer\CatalogProductSaveAfter" />
+    </event>
+</config>

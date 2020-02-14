@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header.panel">
+            <block class="Magento\Framework\View\Element\Html\Links" name="header.links">
+                <arguments>
+                    <argument name="css_class" xsi:type="string">header links</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_img_width" xsi:type="number">148</argument>
+                <argument name="logo_img_height" xsi:type="number">43</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="footer">
+			<block class="Magento\Framework\View\Element\Template" name="footer.connect" template="Magento_Theme::html/footer_connect.phtml" before="-"/>
+			<block class="Magento\Framework\View\Element\Template" name="footer.custom.link" template="Magento_Theme::html/footer_link.phtml" after="footer.connect"/>			
+        </referenceContainer>
+        <referenceBlock name="report.bugs" remove="true"/>
+        <move element="copyright" destination="before.body.end"/>		
+		<referenceContainer name="header-wrapper">
+			<!--<block class="Magento\Framework\View\Element\Template" name="store.menu" group="navigation-sections" template="Magento_Theme::html/container.phtml" after="logo">
+				<arguments>
+					<argument name="title" translate="true" xsi:type="string">Menu</argument>
+				</arguments>
+				<block class="Magento\Theme\Block\Html\Topmenu" name="catalog.topnav" template="html/topmenu.phtml" ttl="3600" before="-"/>
+			</block>-->
+			<container name="header.panel.last" htmlClass="search-switch" htmlTag="div" after="-">				
+				<block class="Magento\Store\Block\Switcher" name="store_switcher1" as="store_switcher1" before="-" template="Magento_Store::switch/stores.phtml"/>
+				<block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher"  template="Magento_Store::switch/languages.phtml" />
+				<!-- <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml" /> -->	
+			</container>			
+        </referenceContainer>
+		<move element="breadcrumbs" destination="main" before="-"/>	
+		<move element="top.search" destination="header.panel.last" after="store_switcher"/>
+			<!--move element="navigation.sections" destination="header-wrapper" after="logo"/-->		
+		<move element="top.container" destination="header-wrapper" after="logo"/>	
+		<move element="minicart" destination="header.panel.last" before="-"/>	
+		<!--<referenceBlock name="navigation.sections" remove="true" />-->
+		<referenceBlock name="header.panel.wrapper" remove="true" />
+		<referenceBlock name="footer_links" remove="true" />
+		<referenceBlock name="form.subscribe" remove="true" />
+		<referenceBlock name="wishlist_sidebar" remove="true"/>
+		<referenceBlock name="catalog.compare.sidebar" remove="true"/>	
+		<referenceBlock name="catalog.compare.link" remove="true"/>
+		<!-- <referenceBlock name="catalog.leftnav" remove="true" /> -->
+		<referenceBlock name="customer-account-navigation-billing-agreements-link" remove="true"/>
+		<referenceBlock name="customer-account-navigation-my-credit-cards-link" remove="true"/>
+		<referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true"/>
+		
+		
+		
+		<referenceBlock name="sale.reorder.sidebar" remove="true" />
+		<referenceContainer name="page.top">
+   <referenceBlock name="store.links" remove="true" />
+</referenceContainer>
+    </body>
+</page>

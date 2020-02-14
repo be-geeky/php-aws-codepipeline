@@ -1,0 +1,469 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product additional attributes template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Attributes
+ */
+?>
+
+<?php
+    $_helper = $this->helper('Magento\Catalog\Helper\Output');
+    $_product = $block->getProduct();
+	$downloadData = $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml();
+	$showDownload = !ctype_space($downloadData);
+?>
+<?php
+	$first_sku = 0;
+	if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+		$_children = $_product->getTypeInstance()->getUsedProducts($_product);
+		//echo "<span class='kihhkljuk' style='display:none'>";
+		foreach($_children as $child){
+			//print_r($child->getId()." - ".$child->getSku()."<br/>");
+			$first_sku = $child->getSku();
+			//echo $child->getSku()." = ".$child->getName()." - ".$child->getBarcodeEan();
+			break;
+		}
+		//echo "</span>";
+		$productAttributeOptions = $_product->getTypeInstance()->getConfigurableAttributesAsArray($_product);
+		//echo "<pre style='display:none;'>";
+		//print_r($productAttributeOptions);
+		//echo "</pre>";
+	}else{
+		$first_sku = $_product->getSku();
+	}
+
+
+?>
+<p class="clearfix"></p>
+<style>
+	.uberAccordion {
+   padding: 0;
+}
+
+.uberAccordion > li {
+    list-style: none;
+    margin: 0;
+}
+
+.uberAccordion > li > h1 {
+    background-color: #e3e3e3;
+    margin: 0;
+    font-size: 16px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.uberAccordion > li > div {
+    /*padding: 15px;*/
+}
+
+
+/* Default CSS for sub-accordion */
+
+.uberAccordion .uberAccordion > li > h1 {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.uberAccordion .uberAccordion > li > div {
+   background-color: #666666;
+   color: #FFF;
+}
+
+
+/* Default CSS for vertical orientation */
+
+.uberAccordion.accordion-vertical {
+    height: 72px;
+}
+
+.uberAccordion .uberAccordion.accordion-vertical {
+    height: 72px;
+}
+</style>
+
+<link  rel="stylesheet" type="text/css"  media="all" href="<?php echo  $block->getUrl().'pub/media/mpopup/style.css'; ?>" />
+<div class="clear"></div>
+<div class="rd">
+		<ul class="newddr">
+			<?php  if($showDownload):  ?>
+				<li class="downloads"><a class="specsheets-links" href="#product-tab-data-downloads"><img src="<?php echo  $block->getUrl().'pub/media/Download-icon.png'; ?>" alt="Downloads" /><span>Downloads</span></a></li>
+			<?php  endif;  ?>
+			<?php
+						$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+						$__modelDistributorFactory = $objectManager->create('Intesols\Distributor\Model\DistributorFactory');
+						//echo "<span style='display:none'>".$_product->getReseller()."</span>";
+						$nationalIdArray = explode(',', $_product->getNationalRetailer());
+						$resellerIdArray = explode(',', $_product->getReseller());
+						$distributorIdArray = explode(',', $_product->getDistributor());
+
+						$distributorModel = $__modelDistributorFactory->create();
+						$resellerModel = $distributorModel->getCollection()->addFieldToFilter('id', array('in' => $resellerIdArray));
+						$nationalModel = $distributorModel->getCollection()->addFieldToFilter('id', array('in' => $nationalIdArray));
+						$distributorModel = $distributorModel->getCollection()->addFieldToFilter('id', array('in' => $distributorIdArray));
+					?>
+			<?php 	$b = 0;
+						foreach($distributorModel as $distributors){ 
+							$b++;
+						}
+						if($b != 0 ) {
+						?>
+							<li class="distributors"><a href="javascript:void(0);" id="showdist"><img src="<?php echo $block->getUrl().'pub/media/Distributor-icon.png'; ?>" alt="Distributor" /><span>View Distributor</span></a></li>
+						<?php } ?>
+				
+				
+		
+				<?php 	$c = 0;
+						foreach($resellerModel as $resellerModels){ 
+							$c++;
+						}
+				?>
+				<?php 	$d = 0;
+						foreach($nationalModel as $nationalModels){ 
+							$d++;
+						}
+				?>
+				<?php if($c != 0 || $d != 0 ) { ?>
+				<li class="resellers"><a href="javascript:void(0);" id="showresller"><img class="res" src="<?php echo $block->getUrl().'pub/media/Reseller-icon.png'; ?>" alt="Resellers" /><span>View Resellers</span></a></li>
+				<?php } ?>
+				<!--li class="distributors"><a href="javascript:void(0);" id="showdist"><img src="<?php echo $block->getUrl().'pub/media/Distributor-icon.png'; ?>" alt="Distributor" /><span>View Distributor</span></a></li>
+				<li class="resellers"><a href="javascript:void(0);" id="showresller"><img src="<?php echo $block->getUrl().'pub/media/Reseller-icon.png'; ?>" alt="Resellers" /><span>View Resellers</span></a></li-->
+		</ul>
+</div>
+
+
+<div id="popup-container" class="distributors-pop">
+        <a class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
+          <div id="popup-window">
+            <div class="modal-content">
+			
+            <div class="wdpu-head"> <div class="wdpu-title"><a href="javascript:void(0);"><img src="<?php echo $block->getUrl().'pub/media/Distributor-icon.png'; ?>" alt="Distributor" /></div> <div class="wdpu-subtitle"><span>View Distributor</span></div> </div> 
+
+
+				<div class="alldist">
+				
+					
+					
+						<div id="distributorcontainer" class="">
+							<ul>
+								<?php foreach($distributorModel as $distributor){
+								
+									$distributor_url = $distributor->getSearchString();
+									$distributor_url = str_replace("{{sku}}",$first_sku,$distributor_url);
+								?>
+								<li>        	
+									<a target="_blank" href="<?php echo $distributor_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$distributor->getLogo() ?>" alt="<?php echo $distributor->getName() ?>" /></a>
+								</li>
+								<?php 	} ?>
+							</ul>	
+						</div>
+				</div>
+
+			</div>
+		  </div>
+</div>		  
+
+<div id="popup-container" class="ressler-pop">
+        <a class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
+          <div id="popup-window">
+            <div class="modal-content">
+			
+            <div class="wdpu-head"> <div class="wdpu-title"><a href="javascript:void(0);"><img src="<?php echo $block->getUrl().'pub/media/Reseller-icon.png'; ?>" alt="Resellers" /></div> <div class="wdpu-subtitle"><span>View Resellers</span></div> </div> 
+
+
+
+
+			<div class="allresler">
+				<div id="reseller-container" class="">
+						<ul>
+						   <?php foreach($nationalModel as $reseller){	
+									$reseller_url = $reseller->getSearchString();
+									$reseller_url = str_replace("{{sku}}",$first_sku,$reseller_url);
+							?>
+								<li>						
+									<a target="_blank" href="<?php echo $reseller_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$reseller->getLogo() ?>" alt="<?php echo $reseller->getName() ?>" /></a>
+								</li>
+							<?php
+							}
+							foreach($resellerModel as $reseller){	
+									$reseller_url = $reseller->getSearchString();
+									$reseller_url = str_replace("{{sku}}",$first_sku,$reseller_url);
+								?>
+								<li>						
+									<a target="_blank" href="<?php echo $reseller_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$reseller->getLogo() ?>" alt="<?php echo $reseller->getName() ?>" /></a>
+								</li>
+							<?php } ?>
+						</ul>	
+				</div>
+			</div>
+
+			</div>
+		  </div>
+</div>
+
+<script>
+
+jQuery(document).ready(function() {
+	
+	jQuery('#popup-container a.close').click(function(){
+			jQuery('#popup-container').fadeOut();
+			jQuery('#active-popup').fadeOut();
+			jQuery('#active-popup').remove();
+			jQuery('body').removeClass('mpopup');
+	});
+	jQuery('.ressler-pop a.close').click(function(){
+			jQuery('.ressler-pop').fadeOut();
+			jQuery('#active-popup').fadeOut();
+			jQuery('#active-popup').remove();
+			jQuery('body').removeClass('mpopup');
+	});
+	
+	jQuery('#showdist').click(function(){
+		setTimeout( function(){ 
+			   var pageHeight = jQuery(document).height();
+						jQuery('<div id="active-popup"></div>').insertBefore('body');
+						jQuery('#active-popup').css("height", pageHeight);
+						jQuery('.distributors-pop').show();
+						jQuery('body').addClass('mpopup');
+			}  , 10 );
+		
+	});
+	jQuery('#showresller').click(function(){
+		setTimeout( function(){ 
+			   var pageHeight = jQuery(document).height();
+						jQuery('<div id="active-popup"></div>').insertBefore('body');
+						jQuery('#active-popup').css("height", pageHeight);
+						jQuery('.ressler-pop').show();
+						jQuery('body').addClass('mpopup');
+			}  , 10 );
+		
+	});
+	
+	jQuery('#active-popup').on( "click", "a",function() {
+			
+			jQuery('#popup-container').fadeOut();
+			jQuery('#active-popup').fadeOut();
+			jQuery('#active-popup').remove();
+			jQuery('body').removeClass('mpopup');
+		    jQuery('.ressler-pop').fadeOut();
+			jQuery('#active-popup').fadeOut();
+			jQuery('#active-popup').remove();
+			jQuery('body').removeClass('mpopup');
+		
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+});
+</script>
+
+
+
+  
+<?php 
+$_product = $block->getProduct(); 
+$pid = $_product->getEntityId();
+$downloadData =  $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml();
+$showDownload = ctype_space($downloadData);
+?> 
+
+<div class="product info detailed">
+	<div class="product-tab-titels" style="display:none;">
+		<div class="product-tab-titel"><a href="#product-tab-data-overview">Overview</a></div>
+		<div class="product-tab-titel"><a href="#product-tab-data-specification">Specification</a></div>
+		<?php if($_product->getConnectionGuide()): ?>
+		<div class="product-tab-titel"><a href="#product-tab-data-connection-guides">Connection Guides</a></div>
+		<?php endif; ?>
+		<?php if(!$showDownload): ?>
+		<div class="product-tab-titel"><a href="#product-tab-data-downloads">Downloads</a></div>
+		<?php endif; ?>
+	</div>
+	<div class="product-tab-info-detail">		
+		<div id="product-tab-data-overview" class="product-tab-data product-overview">			
+			<?php
+			 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+					$murl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+                    ->getStore()
+                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+			
+				$pd = $_product->getDescription();
+				//echo htmlspecialchars($pd);
+				$pd = str_replace('{{media url="',$murl,$pd);
+				$pd = str_replace('"}}','',$pd);		
+				//echo htmlspecialchars($pd);
+			?>
+			<?php echo $pd;//$_product->getDescription(); ?>
+		</div>
+		<?php 
+			$first_sku = 0;
+			$first_barcode =0;
+			if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+				$_children = $_product->getTypeInstance()->getUsedProducts($_product);				
+				foreach($_children as $child){					
+					$first_sku = $child->getSku();					
+					$first_barcode = $child->getBarcodeEan();					
+					break;
+				}				
+				$productAttributeOptions = $_product->getTypeInstance()->getConfigurableAttributesAsArray($_product);				
+			}else{
+				$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+				$product = $objectManager->get('Magento\Catalog\Model\Product')->load($_product->getId());
+				$first_sku = $_product->getSku();
+				$first_barcode = $product->getBarcodeEan();
+			}         
+
+
+		?>	
+		<div id="product-tab-data-specification" class="product-tab-data specification">
+			<h3>Specification  </h3>
+			<div class="part_no_main speci-row"><span class="part_no speci-que">Part No.</span><span id="part-no" class="part_no_value speci-ans"><?php echo $first_sku; ?></span></div>
+			<?php			
+				$attributes = $_product->getCustomAttributes();
+				$i = 1 ;
+				$not_display = array("Special Price","Special Price From Date","Cost","Manufacturer's Suggested Retail Price","Product Translated","National Retailer","Search Weight","Video","Description","Short Description","Meta Title","Meta Keywords","Meta Description","Base","Small","Thumbnail","Categories","Display Product Options In","required_options","has_options","Display Actual Price","URL Key","Allow Gift Message","Tax Class","Swatch","Size", "New", "Sale", "Distributor","Reseller","Featured Image","Connection Guide","Color","Is Featured Product","Length","Barcode (EAN)","Is featured Product Solutions","Product Solutions featured name","Product Soltuions Fetured Product Discription","EOL alternate","EOL","For Sale", "Show view details button on category page");
+				foreach ($attributes as $attribute) {					
+					$attLabel = $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel();
+					echo "<span style='display:none'>".$attLabel."-";					
+					var_dump(array_key_exists($attLabel,$not_display));
+					echo "</span>";
+					//if($i >21 && $attLabel != "Connection Guide" && $attLabel != "Featured Image" && $attLabel != "Reseller"){
+					if(!in_array($attLabel,$not_display)){
+						
+					//echo $attribute->getAttributeCode().' = '.$_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); echo '<br />';	
+					
+					 if($pid == 2507 || $pid == 3659 && $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product) == 'Commercial') {
+					 } else { 
+                        if($_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel() == 'Intelligent Charging') { ?>
+                             <?php 
+                              
+                             if($_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product) != 'No') { ?>
+                                    <div class="speci-row 1">
+                                        <span class="speci-que">
+                                            <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel(); ?>
+                                        </span>
+                                        <span class="speci-ans">
+                                            <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); ?>
+                                        </span>
+                                    </div>
+                            <?php } ?>    
+                        <?php } else { ?>
+                            <?php if($_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product) != "") { ?>
+                            <div class="speci-row">
+                                <span class="speci-que">
+                                    <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel(); ?>
+                                </span>
+                                <span class="speci-ans">
+                                    <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); ?>
+                                </span>
+                            </div>
+                                <?php } ?>
+                        <?php } ?>
+            
+				<?php }  } $i++; } ?>			
+			<?php if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE && $first_barcode) {?>
+				<?php if(!empty($first_barcode)) { ?>
+				<div class="speci-row">
+					<span class="speci-que">Barcode (EAN)</span>
+					<span id="barcode" class="speci-ans"><?php echo $first_barcode; ?></span>
+				</div>
+				<?php } ?>
+			<?php }else{ ?>
+				<div class="speci-row">
+				<?php if(!empty($_product->getBarcodeEan())) { ?>
+					<span class="speci-que">Barcode (EAN)</span>
+					<span id="barcode" class="speci-ans"><?php echo $_product->getBarcodeEan(); ?></span>
+				</div>
+				<?php } ?>
+			<?php } ?>
+		</div>
+		<?php if($_product->getConnectionGuide()): ?>
+		<div id="product-tab-data-connection-guides" class="product-tab-data product-connection-guides">
+			<h3>Connection Guides</h3>
+			<?php $_product->getConnectionGuide(); ?>
+			<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+					$murl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+                    ->getStore()
+                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+					?>
+			<?php   $cg =  $_product->getResource()->getAttribute('connection_guide')->getFrontend()->getValue($_product); 
+					$cg = str_replace('{{media url="',$murl,$cg);
+					$cg = str_replace('"}}','',$cg);	
+					echo $cg;			
+			?>
+		</div>
+		<?php endif; ?>
+		<?php if(!$showDownload): ?>
+		<div id="product-tab-data-downloads" class="product-tab-data product-downloads">
+            <h3>Downloads</h3>
+			<?php echo $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml(); ?>
+		</div>
+		<?php endif; ?>
+	</div>
+</div>
+<script>
+jQuery(".product-tab-titels div").click(function() {
+	jQuery(".product-tab-titels div").each(function( index ) {
+		jQuery(this ).removeClass('active');
+	});
+	jQuery(this).addClass('active');	
+});
+jQuery(window).scroll(function() {	
+	if (jQuery(this).scrollTop()>jQuery('.rd').position().top - 40)
+	 {
+		jQuery('.product-tab-titels').css('display','table');
+	 }
+	else
+	 {      
+		jQuery('.product-tab-titels').hide();
+	 }		
+});	 
+    
+    jQuery('a[href*="#"]')
+  // Remove links that don't actually link to anything
+  .not('[href="#"]')
+  .not('[href="#0"]')
+  .click(function(event) {
+    // On-page links
+    if (
+      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+      && 
+      location.hostname == this.hostname
+    ) {
+      // Figure out element to scroll to
+      var target = jQuery(this.hash);
+      target = target.length ? target : jQuery('[name=' + this.hash.slice(1) + ']');
+      // Does a scroll target exist?
+      if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+        jQuery('html, body').animate({
+          scrollTop: target.offset().top
+        }, 1000, function() {
+          // Callback after animation
+          // Must change focus!
+          var $target = jQuery(target);
+          $target.focus();
+          if ($target.is(":focus")) { // Checking if the target was focused
+            return false;
+          } else {
+            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+            $target.focus(); // Set focus again
+          };
+        });
+      }
+    }
+  });
+</script>

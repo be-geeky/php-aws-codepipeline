@@ -1,0 +1,42 @@
+{
+    "name": "wyomind/elasticsearch",
+    "version": "6.1.2.7",
+    "version_normalized": "6.1.2.7",
+    "dist": {
+        "type": "zip",
+        "url": "https://www.wyomind.com/wyomind-elasticsearchautocomplete-6.1.2.7.zip",
+        "reference": null
+    },
+    "require": {
+        "magento/framework": ">=100.0.0",
+        "php": "~5.5.0|~5.6.0|>=7.0.0",
+        "wyomind/core": ">=3.0.0",
+        "magento/module-catalog-search": "^100.0.0",
+        "elasticsearch/elasticsearch": "^6.0.0"
+    },
+    "type": "magento2-module",
+    "extra": {
+        "map": [
+            [
+                "autocomplete.php",
+                "../../"
+            ],
+            [
+                "pub/autocomplete.php",
+                "../../pub/"
+            ]
+        ]
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Wyomind\\Elasticsearch\\": ""
+        }
+    },
+    "license": [
+        "Commercial License - Copyright 2016  - WYOMIND Sarl - Purchasing any product (Software) from the Wyomind.com web-site means buyer agree to the following statements (see LICENSE.TXT)"
+    ],
+    "description": "The Elasticsearch\u00ae extension allows you to improve the default Magento search results and to enhance search results relevancy. "
+}

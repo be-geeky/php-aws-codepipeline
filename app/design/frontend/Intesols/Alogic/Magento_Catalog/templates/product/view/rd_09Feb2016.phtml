@@ -1,0 +1,652 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product additional attributes template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Attributes
+ */
+?>
+
+<?php	
+    $_helper = $this->helper('Magento\Catalog\Helper\Output');
+    $_product = $block->getProduct();
+	$downloadData = $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml();
+	$showDownload = !ctype_space($downloadData);
+?>
+<?php 
+	$first_sku = 0;
+	if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+		$_children = $_product->getTypeInstance()->getUsedProducts($_product);
+		//echo "<span class='kihhkljuk' style='display:none'>";		
+		foreach($_children as $child){
+			//print_r($child->getId()." - ".$child->getSku()."<br/>");
+			$first_sku = $child->getSku();
+			//echo $child->getSku()." = ".$child->getName()." - ".$child->getBarcodeEan();
+			break;
+		}
+		//echo "</span>";
+		$productAttributeOptions = $_product->getTypeInstance()->getConfigurableAttributesAsArray($_product);
+		//echo "<pre style='display:none;'>";
+		//print_r($productAttributeOptions);
+		//echo "</pre>";
+	}else{
+		$first_sku = $_product->getSku();
+	}         
+
+
+?>
+<p class="clearfix"></p>
+<div class="rd">
+<div class="rd-que">
+	<?php if($showDownload): ?>
+	<div class="rd-titel specsheets-title"><a class="specsheets-link" href="#product-tab-data-downloads" title="Specsheets"><span><img src="<?php echo  $block->getUrl().'pub/media/alogic/icon-specsheets.png'; ?>" alt="Specsheets" /></span><span>Specsheets</span></a></div>
+	<?php endif; ?>
+	<div class="rd-titel distributor-title"><span><img src="<?php echo $block->getUrl().'pub/media/alogic/icon-distributers.png'; ?>" alt="Distributor" /></span><span>View All Distributor</span></div>	
+<?php 
+//echo '';
+	//print_r($_product->getReseller());
+	//print_r($_product->getDistributor());
+	//echo $_product->getReseller();
+	//$_product->getDistributor();
+	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();        
+	$__modelDistributorFactory = $objectManager->create('Intesols\Distributor\Model\DistributorFactory');
+	//echo "<span style='display:none'>".$_product->getReseller()."</span>";
+	$resellerIdArray = explode(',', $_product->getReseller());
+	$distributorIdArray = explode(',', $_product->getDistributor());
+	
+	$distributorModel = $__modelDistributorFactory->create();	
+	$resellerModel = $distributorModel->getCollection()->addFieldToFilter('id', array('in' => $resellerIdArray));
+	$distributorModel = $distributorModel->getCollection()->addFieldToFilter('id', array('in' => $distributorIdArray));	
+	/*echo "<pre>";
+    var_dump($distributorModel->getData());
+	var_dump($resellerModel->getData());
+	echo "</pre>";*/	
+	echo '<div id="distributor-main-acontainer" class="distributor" style="display:none">';
+	foreach($distributorModel as $distributor){?>
+	<?php 
+		$distributor_url = $distributor->getSearchString(); 
+		$distributor_url = str_replace("{{sku}}",$first_sku,$distributor_url);
+	?>	
+	<div id="<?php echo "distributor".$distributor->getId() ?>" class="item">
+		<span style="display:none;"><?php echo $distributor->getSearchString(); ?></span>
+		<a href="<?php echo $distributor_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$distributor->getLogo() ?>" alt="<?php echo $distributor->getName() ?>" /></a>
+	</div>	
+	<?php
+	}
+	echo "</div>";
+?>	
+	<div class="rd-titel reseller-title"><span><img src="<?php echo $block->getUrl().'pub/media/alogic/icon-resellers.png'; ?>" alt="Resellers" /></span><span>View All Reseller</span></div>
+<!--<div class="rd-ans">-->
+<?php
+		
+	echo '<div id="reseller-main-contaianer" class="reseller" style="display:none">';
+	foreach($resellerModel as $reseller){	?>
+		<?php 
+			$reseller_url = $reseller->getSearchString();
+			$reseller_url = str_replace("{{sku}}",$first_sku,$reseller_url);
+		?>		
+		<div id="<?php echo "reseller".$reseller->getId() ?>"  class="item">
+			<span style="display:none;"><?php echo $reseller->getSearchString(); ?></span>
+			<a href="<?php echo $reseller_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$reseller->getLogo() ?>" alt="<?php echo $reseller->getName() ?>" /></a>
+		</div>
+	<?php	
+	}
+	echo "</div>";
+?>
+</div>
+<!--</div>-->
+</div>
+<style>
+	.uberAccordion {
+   padding: 0;
+}
+
+.uberAccordion > li {
+    list-style: none;
+    margin: 0;
+}
+
+.uberAccordion > li > h1 {
+    background-color: #e3e3e3;
+    margin: 0;
+    font-size: 16px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.uberAccordion > li > div {
+    padding: 15px;
+}
+
+
+/* Default CSS for sub-accordion */
+
+.uberAccordion .uberAccordion > li > h1 {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.uberAccordion .uberAccordion > li > div {
+   background-color: #666666;
+   color: #FFF;
+}
+
+
+/* Default CSS for vertical orientation */
+
+.uberAccordion.accordion-vertical {
+    height: 72px;
+}
+
+.uberAccordion .uberAccordion.accordion-vertical {
+    height: 72px;
+}
+</style>
+<div class="rd">
+<div class="accordionContainer rd-que">
+  <ul>
+  	<?php if($showDownload): ?>
+    <li>
+      
+	<div class="rd-titel specsheets-title title"><a class="specsheets-link" title="Specsheets"><span><img src="<?php echo  $block->getUrl().'pub/media/alogic/icon-specsheets.png'; ?>" alt="Specsheets" /></span><span>Specsheets</span></a></div>
+	<div class="content" style="display: none">
+        Content for slide three is rendered from here.
+      </div>
+    </li>
+    <?php endif; ?>
+
+    <li>
+      <div class="rd-titel distributor-title title"><span><img src="<?php echo $block->getUrl().'pub/media/alogic/icon-distributers.png'; ?>" alt="Distributor" /></span><span>View All Distributor</span></div>
+      <div class="content">
+      	<?php 
+        echo '<div id="distributor-main-container" class="distributor" style="display:none">';
+        	foreach($distributorModel as $distributor){?>
+        	<?php 
+        		$distributor_url = $distributor->getSearchString(); 
+        		$distributor_url = str_replace("{{sku}}",$first_sku,$distributor_url);
+        	?>	
+        	<div id="<?php echo "distributor".$distributor->getId() ?>" class="item">
+        		<span style="display:none;"><?php echo $distributor->getSearchString(); ?></span>
+        		<a href="<?php echo $distributor_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$distributor->getLogo() ?>" alt="<?php echo $distributor->getName() ?>" /></a>
+        	</div>	
+        	<?php
+        	}
+        	echo "</div>";
+        	?>
+      </div>
+    </li>
+
+    <li>
+      <div class="rd-titel reseller-title title"><span><img src="<?php echo $block->getUrl().'pub/media/alogic/icon-resellers.png'; ?>" alt="Resellers" /></span><span>View All Reseller</span></div>
+      <div class="content">
+        <?php
+		
+	echo '<div id="reseller-main-container" class="reseller" style="display:none">';
+	foreach($resellerModel as $reseller){	?>
+		<?php 
+			$reseller_url = $reseller->getSearchString();
+			$reseller_url = str_replace("{{sku}}",$first_sku,$reseller_url);
+		?>		
+		<div id="<?php echo "reseller".$reseller->getId() ?>"  class="item">
+			<span style="display:none;"><?php echo $reseller->getSearchString(); ?></span>
+			<a href="<?php echo $reseller_url; ?>"><img width="125" height="100" src="<?php echo $this->getUrl('pub/media').$reseller->getLogo() ?>" alt="<?php echo $reseller->getName() ?>" /></a>
+		</div>
+	<?php	
+	}
+	echo "</div>";
+?>
+      </div>
+    </li>
+  </ul>
+</div>
+</div>
+<script type="text/javascript">
+(function($) {
+
+    var UberAccordion = function(parent, options) {
+
+        // Default settings
+
+        var defaults = {
+            verticalClass    : 'accordion-vertical',    // Class to apply when orientation is vertical
+            horizontalClass  : 'accordion-horizontal',  // Class to apply when orientation is horizontal
+            activeSlideClass : 'active',                // Class to apply on active accordion slide
+            orientation      : 'vertical',              // Accordion orientation
+            orientationQuery : '(max-width: 700px)',    // Media query which causes orientation change
+            startSlide       : 0,                       // Starter slide
+            openMultiple     : false,                   // Set to true for multiple open slides at a time
+            autoPlay         : false,                   // Auto-play
+            autoPlaySpeed    : 5000,                    // Auto-play interval
+            slideEvent       : 'click',                 // Open slide event
+            animationSpeed   : 333,                     // Animation Speed
+            headerItem       : typeof options.headerClass === 'undefined' ? 'div' : '.' + options.headerClass,     // Header class
+            contentItem      : typeof options.contentClass === 'undefined' ? 'div' : '.' + options.contentClass   // Content class
+        };
+
+        var settings  = $.extend(true, {}, defaults, options);                  // Add user settings with overwrite
+        var el        = parent.children('ul');                                  // Accordion container
+        var slides    = el.children().children(settings.contentItem);           // Accordion slides
+        var headers   = el.children('li').children(settings.headerItem);        // Accordion headers
+        var state     = {};                                                     // Keeps current accordion state (ie. currentSlide, orientation, etc)
+
+        var showSlideCallback = function() {
+            el.trigger('ua-slide-changed');
+        }
+
+        this.toggleSlide = function(slideNumber, override) {
+
+            if(!settings.openMultiple) {
+
+                // If multiple is disabled, open current slide and close other
+
+
+
+                if(slideNumber !== state.currentSlide || override) {
+                    this.hideSlide($(slides[el.children('li.' + settings.activeSlideClass).index()]));
+                    this.showSlide($(slides[slideNumber]));
+                }
+                resizeHeaders();
+
+            } else {
+
+                // If multiple is enabled, toggle clicked slide
+
+                if($(slides[slideNumber]).parent().hasClass(settings.activeSlideClass)) {
+                    this.hideSlide($(slides[slideNumber]));
+                } else {
+                    this.showSlide($(slides[slideNumber]));
+                }
+            }
+
+            state.currentSlide = slideNumber;
+        }
+
+        this.showSlide = function(slide) {
+
+            if(state.orientation === "horizontal") {
+                slide.slideDown(settings.animationSpeed, showSlideCallback);
+            } else {
+                slide.parent().animate({
+                    width: slide.parent().attr('data-width')
+                }, settings.animationSpeed, showSlideCallback);
+            }
+           
+            slide.parent().addClass(settings.activeSlideClass);
+        }
+
+        this.hideSlide = function(slide) {
+            if(state.orientation === "horizontal") {
+                slide.slideUp(settings.animationSpeed);
+            } else {
+                slide.parent().animate({
+                    width: slide.parent().children(settings.headerItem).attr('data-width')
+                }, settings.animationSpeed);
+            }
+            slide.parent().removeClass(settings.activeSlideClass);
+        }
+
+        this.setOrientation = function(orientation) {
+
+            el.removeClass(settings.horizontalClass + ' ' + settings.verticalClass);
+
+            switch(orientation) {
+                case 'vertical':
+                    el.addClass(settings.verticalClass);
+                    //$('p').html('switch vertical mode');
+                    installVertical();
+                    break;
+
+                case 'horizontal':
+                    el.addClass(settings.horizontalClass);
+
+                    // Don't wipe styles on first load
+
+                    if(typeof state.orientation !== 'undefined') {
+                        uninstallVertical();
+                    }
+                    
+                    //$('p').html('switch horizontal mode');
+                    applyHorizontalBase();
+
+                    break;
+            }
+
+            $(slides[state.currentSlide])
+                .show()
+                .parent().addClass(settings.activeSlideClass);
+
+            state.orientation = orientation;
+        }
+
+        this.setAutoplay = function(enabled) {
+
+            var _this = this;
+
+            if(enabled) {
+                state.autoPlayInterval = setInterval(function() {
+                    var totalSlides = el.children('li').children(settings.headerItem).length;
+                    state.currentSlide = state.currentSlide < (totalSlides - 1) ? state.currentSlide + 1 : 0;
+                    _this.toggleSlide(state.currentSlide, true);
+                }, settings.autoPlaySpeed);
+            } else {
+                if(typeof state.autoPlayInterval !== "undefined") {
+                    clearInterval(state.autoPlayInterval);
+                }
+            }
+        }
+
+        // Installs styling and events for vertical slider
+
+        var installVertical = function() {
+
+            uninstallVertical();
+
+            $(window).bind('resize', resizeContainer);
+
+            applyVerticalBase();
+            calculateSizes();
+        }
+
+        var applyVerticalBase = function() {
+
+            slides.parent().css(CSSObject.SlideContainers);
+
+            //CSSObject.Headers.functions.setTransforms(-$(headers[0]).outerHeight(), 0);
+            CSSObject.Slides.functions.setHeight(el.outerHeight(true));
+            CSSObject.Slides.functions.setLeft($(headers[0]).outerHeight(true));
+
+            headers.css(CSSObject.Headers.defaults);
+            headers.setOuterWidth(el.innerHeight());
+            slides.css(CSSObject.Slides.defaults);
+        }
+
+        var applyHorizontalBase = function() {
+            slides.css({ 'display': 'none' });
+        }
+
+        // Calculate sizes and save widths in data attributes
+        // for safe animating
+
+        var calculateSizes = function() {
+
+            var totalHeaderWidth = 0;
+            var currentContainer = el.children('li.' + settings.activeSlideClass);
+            var currentHeader    = currentContainer.children(settings.headerItem);
+            var parentWidth      = parent.innerWidth();
+
+            var slideWidth, headerWidth;
+
+            var totalHeaders = $('div.accordionContainer ul li').length;
+
+            headers.each(function() {
+                headerWidth = parentWidth/totalHeaders;//$(this).outerHeight(true);
+                totalHeaderWidth += headerWidth;
+                $(this).parent().width(headerWidth);
+                $(this).css("width",headerWidth);
+                $(this).attr('data-width', headerWidth);
+            });
+
+            slides.each(function() {
+                slideWidth  = parentWidth/2;// - totalHeaderWidth;
+                headerWidth = parentWidth/totalHeaders;//$(this).parent().children(settings.headerItem).outerHeight(true);
+                console.log(headerWidth);
+                $(this).setOuterWidth(slideWidth);
+                $(this).attr('data-width', slideWidth);
+                $(this).css("left",headerWidth);
+                $(this).parent().attr('data-width', slideWidth + parentWidth/(2*totalHeaders) - 1);
+            });
+
+            currentContainer.width(parentWidth - totalHeaderWidth + currentHeader.outerHeight(true) - 1);
+
+        }
+
+        var resizeHeaders = function() {
+        	if(state.orientation === "vertical") {
+        	var totalHeaders = $('div.accordionContainer ul li').length;
+        	var parentWidth      = parent.innerWidth();
+        	slides.each(function() {
+        	    headerWidth = parentWidth/(2*totalHeaders);
+        	    $(this).css("left",headerWidth);
+        	});
+        	headers.each(function() {
+        	    headerWidth = parentWidth/(2*totalHeaders);//$(this).outerHeight(true);
+        	    if($(this).attr('data-width') != headerWidth) {
+        	    	$(this).parent().width(headerWidth);
+        		}
+        		$(this).css("width",headerWidth);
+        	    $(this).attr('data-width', headerWidth);
+        	});
+        	}
+        }
+
+        // Called on resize event - adjusts accordion width according
+        // to parent to allow fluid design
+
+        var resizeContainer = function() {
+
+            if(state.orientation === "vertical") {
+
+                // If we don't hide the accordion before reading the parent's width value
+                // the parent will not auto-adjust in width
+
+                el.css('display', 'none');
+                el.width(parent.innerWidth());
+                el.css('display', 'block');
+
+                calculateSizes();
+            }
+            resizeHeaders();
+        }
+
+        // Uninstalls vertical events and styles
+
+        var uninstallVertical = function() {
+
+            $(window).unbind('resize', resizeContainer);
+
+            el.removeAttr('style');
+            el.children('li').removeAttr('style');
+            slides.removeAttr('style');
+
+            headers.removeAttr('style');
+        }
+
+        // Constructor
+
+        var initialize = function(scope) {
+
+            if(typeof options.headerClass !== 'undefined' && typeof options.contentClass === 'undefined') {
+                throw("Content class must be defined along with header class.");
+            }
+
+            el.addClass('uberAccordion');
+
+            headers.on(settings.slideEvent, function(e) {
+                scope.toggleSlide(el.children('li').children(settings.headerItem).index(this));
+                scope.setAutoplay(false);
+
+                e.stopImmediatePropagation();
+            });
+
+            // If set to responsive, handle orientation changes
+
+            if(settings.orientationQuery) {
+                state.matchesQuery = window.matchMedia(settings.orientationQuery).matches;
+
+                // If media query match state changes, switch orientation
+                $(window).resize(function() {
+                    if(window.matchMedia(settings.orientationQuery).matches !== state.matchesQuery) {
+                        state.matchesQuery = window.matchMedia(settings.orientationQuery).matches;
+                        scope.setOrientation(state.orientation === 'vertical' ? 'horizontal' : 'vertical');
+                    }
+                });
+
+                if(state.matchesQuery) {
+                    settings.orientation = settings.orientation === 'vertical' ? 'horizontal' : 'vertical';
+                }
+            }
+
+            state.currentSlide = settings.startSlide - 1;
+            $(slides[state.currentSlide]).parent().addClass(settings.activeSlideClass);
+
+            scope.setOrientation(settings.orientation);
+
+            // Set-up auto-play if enabled
+
+            if(settings.autoPlay && !settings.openMultiple) {
+                scope.setAutoplay(true);
+            }
+
+            el.attr('data-accordion-active', "true");
+        }
+
+        initialize(this);
+    }
+
+    $.fn.uberAccordion = function(options) {
+
+        // Avoid double instantiating
+
+        return $(this).children("ul").attr('data-accordion-active') === "true" ? false : new UberAccordion(this, options);
+    }
+
+    // Set total width with padding and borders (outerWidth)
+
+    $.fn.setOuterWidth = function(value) {
+        $(this).each(function() {
+            var paddingLeft = isNaN(parseInt($(this).css('padding-left'), 10)) || $(this).css('padding-left') === '100%' ? 0 : parseInt($(this).css('padding-left'), 10);
+            var paddingRight = isNaN(parseInt($(this).css('padding-right'), 10)) || $(this).css('padding-right') === '100%' ? 0 : parseInt($(this).css('padding-right'), 10);
+            var borderLeft = isNaN(parseInt($(this).css('border-left-width'), 10)) ? 0 : parseInt($(this).css('border-left-width'), 10);
+            var borderRight = isNaN(parseInt($(this).css('border-right-width'), 10)) ? 0 : parseInt($(this).css('border-right-width'), 10);
+            
+            $(this).width(value - paddingLeft - paddingRight - borderLeft - borderRight);
+        });
+    }
+
+    // CSS Object for vertical accordion
+    // These base styles are necessary for all vertical accordions
+
+    var CSSObject = {
+
+        SlideContainers: {
+            'display': 'inline',
+            'overflow': 'hidden',
+            'float': 'left',
+            'height': '100%',
+            'position': 'relative'
+        },
+
+        Headers: {
+
+            defaults: {
+                'display': 'block',
+                'float': 'left',
+                'white-space': 'nowrap',
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'transform-origin': '0 100% 0',
+                '-webkit-transform-origin': '0 100%',
+                '-moz-transform-origin': '0 100%',
+                '-ms-transform-origin': '0 100%'
+            },
+
+            functions: {
+                setTransforms: function(x, y) {
+                    CSSObject.Headers.defaults['-webkit-transform'] = "rotate(90deg) translate(" + x + "px, " + y + "px)";
+                    CSSObject.Headers.defaults['-moz-transform'] = "rotate(90deg) translate(" + x + "px, " + y + "px)";
+                    CSSObject.Headers.defaults['-ms-transform'] = "rotate(90deg) translate(" + x + "px, " + y + "px)";
+                    CSSObject.Headers.defaults['-sand-transform'] = "rotate(90deg) translate(" + x + "px, " + y + "px)";
+                    CSSObject.Headers.defaults['transform'] = "rotate(90deg) translate(" + x + "px, " + y + "px)";
+                    //CSSObject.Headers.defaults['filter'] = "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+                }
+            }
+        },
+
+        Slides: {
+
+            defaults: {
+                'float': 'left',
+                'height': 0,
+                'display': 'block',
+                'position': 'absolute',
+                'top': '0'
+            },
+
+            functions: {
+                setHeight: function(height) { CSSObject.Slides.defaults.height = height; },
+                setLeft: function(left) { CSSObject.Slides.defaults.left = left; }
+            }
+        }
+    }
+
+    $('.accordionContainer').uberAccordion({
+    headerClass: 'title',
+    contentClass: 'content' 
+  });
+    
+}(jQuery));
+</script>
+
+<script type="text/javascript">
+	var sku =  "<?php echo $first_sku; ?>";
+	if(sku != "0"){
+		jQuery(".product.attribute.sku .value").html("<?php echo $first_sku; ?>");
+	}	
+	jQuery(".distributor-title").click(function() {		
+		if(jQuery('.reseller').is(":visible") && !jQuery('.distributor').is(":visible")){			
+			jQuery(".reseller").fadeToggle();
+			//jQuery(".reseller").toggle("slide", { direction: "left" }, 4000);
+			jQuery(".reseller-title").toggleClass('active');
+		}
+		jQuery(".distributor").fadeToggle();
+		//jQuery(".distributor").toggle("slide", { direction: "left" }, 1500);		
+		jQuery(this).toggleClass('active');	
+	});
+	jQuery(".reseller-title").click(function() {		
+		if(jQuery('.distributor').is(":visible") && !jQuery('.reseller').is(":visible")){			
+			jQuery(".distributor").fadeToggle();
+			//jQuery(".distributor").toggle("slide", { direction: "left" }, 4000);
+			jQuery(".distributor-title").toggleClass('active');
+		}
+		jQuery(".reseller").fadeToggle();
+		//jQuery(".reseller").toggle("slide", { direction: "left" }, 4000);
+		jQuery(this).toggleClass('active');
+	});
+	jQuery(document).ready(function() { 
+		jQuery(".distributor").owlCarousel({ 
+			autoPlay: 5000,
+			items : 4,
+			itemsDesktop : [1199,3],
+			itemsDesktopSmall : [979,3],
+			scrollPerPage: true,
+			nav: true,
+			navText: ['<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>','<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>'],
+			stopOnHover : true,
+			dots: false,
+			pagination : false
+		});	
+		jQuery(".reseller").owlCarousel({ 
+			autoPlay: 5000,
+			items : 4,
+			itemsDesktop : [1199,3],
+			itemsDesktopSmall : [979,3],
+			nav: true,
+			navText: ['<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>','<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>'],
+			dots: false,
+			pagination : false	 
+		});
+		/*var rdw = jQuery(".rd").width();		
+		jQuery(".rd-que").width(rdw*0.54);
+		jQuery(".rd-ans").width(rdw*0.45);
+		var crouselWidth = (rdw*0.45)-80.00;
+		jQuery(".distributor>div:first-child").width(crouselWidth);
+		jQuery(".reseller>div:first-child").width(crouselWidth);*/	
+	});
+</script>

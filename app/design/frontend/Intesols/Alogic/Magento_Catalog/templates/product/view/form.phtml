@@ -1,0 +1,164 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product view template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View
+ */
+?>
+<?php $_helper = $this->helper('Magento\Catalog\Helper\Output'); ?>
+<?php $_product = $block->getProduct(); ?>
+
+
+<div class="product-add-form">
+    <form data-product-sku="<?php echo $block->escapeHtml($_product->getSku()) ?>"
+          action="<?php echo $block->escapeHtml($block->getSubmitUrl($_product)) ?>" method="post"
+          id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+        <input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $_product->getId() ?>" />
+        <input type="hidden" name="selected_configurable_option" value="" />
+        <input type="hidden" name="related_product" id="related-products-field" value="" />
+        <?php echo $block->getBlockHtml('formkey')?>
+        <?php echo $block->getChildHtml('form_top'); ?>
+        <?php if (!$block->hasOptions()):?>
+            <?php echo $block->getChildHtml('product_info_form_content'); ?>
+        <?php else:?>
+            <?php if ($_product->isSaleable() && $block->getOptionsContainer() == 'container1'):?>
+                <?php echo $block->getChildChildHtml('options_container') ?>
+            <?php endif;?>
+        <?php endif; ?>
+
+        <?php if ($_product->isSaleable() && $block->hasOptions() && $block->getOptionsContainer() == 'container2'):?>
+            <?php echo $block->getChildChildHtml('options_container') ?>
+        <?php endif;?>
+        <?php echo $block->getChildHtml('form_bottom'); ?>
+    </form>
+	
+
+</div>
+<script>
+    require([
+        'jquery',
+        'priceBox'
+    ], function($){
+        var dataPriceBoxSelector = '[data-role=priceBox]',
+            dataProductIdSelector = '[data-product-id=<?php echo $block->escapeHtml($_product->getId())?>]',
+            priceBoxes = $(dataPriceBoxSelector + dataProductIdSelector);
+
+        priceBoxes = priceBoxes.filter(function(index, elem){
+            return !$(elem).find('.price-from').length;
+        });
+
+        priceBoxes.priceBox({'priceConfig': <?php /* @escapeNotVerified */ echo $block->getJsonConfig() ?>});
+    });
+</script>
+<?php
+if($_product->getTypeId() == 'simple'){
+$count = 6; 
+for($i = 1; $i<$count; $i++){
+$btn_text = "bttn".$i."_txt";
+$btn_url = "bttn".$i."_url";
+if($_product->getData($btn_text) != ""){
+ ?>
+<div class="buyatcall">
+            <a href="<?php echo $_product->getData($btn_url);  ?>" title="<?php echo $_product->getData($btn_text); ?>" class="action primary tocart">
+                <span><?php echo $_product->getData($btn_text); ?></span>
+            </a>
+</div>
+
+<?php } } } ?>
+
+<div id="newbtn">
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
+$productTypeInstance = $product->getTypeInstance();
+if($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE){
+$usedProducts = $productTypeInstance->getUsedProducts($product);
+$products = $objectManager->create('Magento\Catalog\Api\ProductRepositoryInterface');
+//$childProducts = $block->getChilds();
+foreach ($usedProducts as $child){
+?>
+            
+<div class="calltoactionbtnid_<?php echo $child->getID(); ?> hide_btn" style="display: none;">
+     <?php $child_id = $child->getID(); ?>
+     <?php $productss = $products->getById($child->getID()); ?>
+    
+	 <?php if($productss->getData('bttn1_txt') != ""){ ?>
+	 <div class="buyatcall">
+            <a href="<?php echo $productss->getData('bttn1_url');  ?>" title="<?php echo $productss->getData('bttn1_txt'); ?>" class="action primary tocart" target="_blank">
+                <span><?php echo $productss->getData('bttn1_txt'); ?></span>
+            </a>
+     </div>
+	 <?php } ?>
+	 <?php if($productss->getData('bttn2_txt') != ""){ ?>
+	 <div class="buyatcall">
+            <a href="<?php echo $productss->getData('bttn2_url');  ?>" title="<?php echo $productss->getData('bttn2_txt'); ?>" class="action primary tocart" target="_blank">
+                <span><?php echo $productss->getData('bttn2_txt'); ?></span>
+            </a>
+     </div>
+	 <?php } ?>
+	 <?php if($productss->getData('bttn3_txt') != ""){ ?>
+	 <div class="buyatcall">
+            <a href="<?php echo $productss->getData('bttn3_url');  ?>" title="<?php echo $productss->getData('bttn3_txt'); ?>" class="action primary tocart" target="_blank">
+                <span><?php echo $productss->getData('bttn3_txt'); ?></span>
+            </a>
+     </div>
+	 <?php } ?>
+	 <?php if($productss->getData('bttn4_txt') != ""){ ?>
+	 <div class="buyatcall">
+            <a href="<?php echo $productss->getData('bttn4_url');  ?>" title="<?php echo $productss->getData('bttn4_txt'); ?>" class="action primary tocart" target="_blank">
+                <span><?php echo $productss->getData('bttn4_txt'); ?></span>
+            </a>
+     </div>
+	 <?php } ?>
+	 <?php if($productss->getData('bttn5_txt') != ""){ ?>
+	 <div class="buyatcall">
+            <a href="<?php echo $productss->getData('bttn5_url');  ?>" title="<?php echo $productss->getData('bttn5_txt'); ?>" class="action primary tocart" target="_blank">
+                <span><?php echo $productss->getData('bttn5_txt'); ?></span>
+            </a>
+     </div>
+	 <?php } ?>
+</div>
+            <?php
+} }
+?>
+</div>
+
+<?php /*
+$count = 6;
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product_id =  $block->getProduct()->getId();//Configurable product ID
+
+$configProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+
+
+$_children = $_product->getTypeInstance()->getUsedProducts($_product);
+$prod = $objectManager->create('Magento\Catalog\Api\ProductRepositoryInterface');
+
+foreach ($_children as $child){
+    echo $child->getID()."-:-".$child->getSku()."</br>";
+	
+	$productObj = $prod->getById($child->getID());
+	//echo $productObj->getData('bttn1_txt')."</br>";
+	
+	for($j = 1; $j<$count; $j++){
+	$btn_text = "bttn".$j."_txt";
+	$btn_url = "bttn".$j."_url";
+	if($productObj->getData($btn_text) != ""){
+		echo "hitest".$child->getID();
+	?>
+	<div class="buyatcall buyatcall<?php echo $child->getID(); ?>">
+            <a href="<?php echo $productObj->getData($btn_url);  ?>" title="<?php echo $productObj->getData($btn_text); ?>" class="action primary tocart">
+                <span><?php echo $productObj->getData($btn_text); ?></span>
+            </a>
+</div>
+<?php 
+} } 
+}*/
+?>

@@ -1,0 +1,147 @@
+   
+<?php 
+$_product = $block->getProduct(); 
+$pid = $_product->getEntityId();
+$downloadData =  $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml();
+$showDownload = ctype_space($downloadData);
+?> 
+
+<div class="product info detailed">
+	<div class="product-tab-titels" style="display:none;">
+		<div class="product-tab-titel"><a href="#product-tab-data-overview">Overview</a></div>
+		<div class="product-tab-titel"><a href="#product-tab-data-specification">Specification</a></div>
+		<?php if($_product->getConnectionGuide()): ?>
+		<div class="product-tab-titel"><a href="#product-tab-data-connection-guides">Connection Guides</a></div>
+		<?php endif; ?>
+		<?php if(!$showDownload): ?>
+		<div class="product-tab-titel"><a href="#product-tab-data-downloads">Downloads</a></div>
+		<?php endif; ?>
+	</div>
+	<div class="product-tab-info-detail">		
+		<div id="product-tab-data-overview" class="product-tab-data product-overview">			
+			<?php
+				$pd = $_product->getDescription();
+				//echo htmlspecialchars($pd);
+				$pd = str_replace('{{media url="','https://www.alogic.co/pub/media/',$pd);
+				$pd = str_replace('"}}','',$pd);		
+				//echo htmlspecialchars($pd);
+			?>
+			<?php echo $pd;//$_product->getDescription(); ?>
+		</div>
+		<?php 
+			$first_sku = 0;
+			$first_barcode =0;
+			if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+				$_children = $_product->getTypeInstance()->getUsedProducts($_product);				
+				foreach($_children as $child){					
+					$first_sku = $child->getSku();					
+					$first_barcode = $child->getBarcodeEan();					
+					break;
+				}				
+				$productAttributeOptions = $_product->getTypeInstance()->getConfigurableAttributesAsArray($_product);				
+			}else{
+				$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+				$product = $objectManager->get('Magento\Catalog\Model\Product')->load($_product->getId());
+				$first_sku = $_product->getSku();
+				$first_barcode = $product->getBarcodeEan();
+			}         
+
+
+		?>	
+		<div id="product-tab-data-specification" class="product-tab-data specification">
+			<h3>Specification  </h3>
+			<div class="part_no_main speci-row"><span class="part_no speci-que">Part No.</span><span id="part-no" class="part_no_value speci-ans"><?php echo $first_sku; ?></span></div>
+			<?php			
+				$attributes = $_product->getCustomAttributes();
+				$i = 1 ;
+				$not_display = array("Special Price","Special Price From Date","Cost","Manufacturer's Suggested Retail Price","National Retailer","Search Weight","Video","Description","Short Description","Meta Title","Meta Keywords","Meta Description","Base","Small","Thumbnail","Categories","Display Product Options In","required_options","has_options","Display Actual Price","URL Key","Allow Gift Message","Tax Class","Swatch","Size", "New", "Sale", "Distributor","Reseller","Featured Image","Connection Guide","Color","Is Featured Product","Length","Barcode (EAN)","Is featured Product Solutions","Product Solutions featured name","Product Soltuions Fetured Product Discription","EOL alternate","EOL");	
+				
+				foreach ($attributes as $attribute) {	
+					
+						
+					$attLabel = $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel();
+					echo "<span class='jay' style='display:none;'>".$attLabel."</span>";
+					if($attLabel !="Special Price") 
+					{
+					echo "<span style='display:none'>".$attLabel."-";					
+					var_dump(array_key_exists($attLabel,$not_display));
+					echo "</span>";
+					//if($i >21 && $attLabel != "Connection Guide" && $attLabel != "Featured Image" && $attLabel != "Reseller"){
+					if(!in_array($attLabel,$not_display)){
+						
+					//echo $attribute->getAttributeCode().' = '.$_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); echo '<br />';	
+					
+					 if($pid == 2507 || $pid == 3659 && $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product) == 'Commercial') {
+					 } else { 
+                        if($_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel() == 'Intelligent Charging') { ?>
+                             <?php 
+                              
+                             if($_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product) != 'No') { ?>
+                                    <div class="speci-row 1">
+                                        <span class="speci-que">
+                                            <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel(); ?>:
+                                        </span>
+                                        <span class="speci-ans">
+                                            <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); ?>
+                                        </span>
+                                    </div>
+                            <?php } ?>    
+                        <?php } else { ?>
+                            <div class="speci-row">
+                                <span class="speci-que">
+                                    <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getLabel(); ?>:
+                                </span>
+                                <span class="speci-ans">
+                                    <?php echo $_product->getResource()->getAttribute($attribute->getAttributeCode())->getFrontend()->getValue($_product); ?>
+                                </span>
+                            </div>
+                        <?php } ?>
+            
+				<?php }  } $i++; } 
+				}
+				?>			
+			<?php if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE && $first_barcode) {?>
+				
+				<div class="speci-row">
+					<span class="speci-que">Barcode (EAN):</span>
+					<span id="barcode" class="speci-ans"><?php echo $first_barcode; ?></span>
+				</div>
+			<?php }else{ ?>
+				<div class="speci-row">
+					<span class="speci-que">Barcode (EAN):</span>
+					<span id="barcode" class="speci-ans"><?php echo $_product->getBarcodeEan(); ?></span>
+				</div>
+			<?php } ?>
+		</div>
+		<?php if($_product->getConnectionGuide()): ?>
+		<div id="product-tab-data-connection-guides" class="product-tab-data product-connection-guides">
+			<h3>Connection Guides</h3>
+			<?php echo $_product->getConnectionGuide(); ?>
+		</div>
+		<?php endif; ?>
+		<?php if(!$showDownload): ?>
+		<div id="product-tab-data-downloads" class="product-tab-data product-downloads">
+            <h3>Downloads</h3>
+			<?php echo $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml(); ?>
+		</div>
+		<?php endif; ?>
+	</div>
+</div>
+<script>
+jQuery(".product-tab-titels div").click(function() {
+	jQuery(".product-tab-titels div").each(function( index ) {
+		jQuery(this ).removeClass('active');
+	});
+	jQuery(this).addClass('active');	
+});
+jQuery(window).scroll(function() {	
+	if (jQuery(this).scrollTop()>jQuery('.rd').position().top - 40)
+	 {
+		jQuery('.product-tab-titels').css('display','table');
+	 }
+	else
+	 {      
+		jQuery('.product-tab-titels').hide();
+	 }		
+});	 
+</script>

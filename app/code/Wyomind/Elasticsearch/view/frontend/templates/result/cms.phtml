@@ -1,0 +1,26 @@
+<?php
+if ($block->isElasticsearch()) :
+    $_pages = $block->getPageCollection();
+    ?>
+    <?php if ($_pages && $_pages->count()): ?>
+        <div class="block block-compare">
+            <div class="block-title">
+                <strong><?php echo __('Page Results') ?></strong>
+                <span class="counter"><?php echo __('%1', $_pages->count()) ?></span>
+            </div>
+            <div class="block-content">
+                <ul>
+                    <?php foreach ($_pages as $_page): /** @var \Magento\Cms\Model\Page $_page */ ?>
+                        <li>
+                            <a href="<?php echo $block->escapeUrl($block->getBaseUrl() . $_page->getIdentifier()) ?>"
+                               title="<?php echo $block->escapeHtml($_page->getTitle()) ?>">
+                                   <?php echo $block->escapeHtml($_page->getTitle()) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    <?php
+    endif;
+endif;

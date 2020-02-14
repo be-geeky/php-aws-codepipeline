@@ -1,0 +1,158 @@
+
+<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance() ?>
+<?php $posts = $objectManager->create('FishPig\WordPress\Model\ResourceModel\Post\Collection')
+	->addPostTypeFilter('post')
+	->setOrderByPostDate()
+	->addIsViewableFilter()
+	->setPageSize(2)
+	->load(); 
+	$m = 0; 
+	?>
+	
+<?php if (count($posts) > 0): ?>	
+		<?php foreach($posts as $post): ?>
+		<?php if($m == 0) { ?>
+		<div class="ves-container   ">
+
+    <div>
+
+        <div class="ves-inner   ">
+
+            <div class="row row-level-2  ">
+							<div class="row-inner clearfix ">
+								<div class=" col-lg-6 col-md-4 col-sm-6 col-xs-12  ">
+									<div class="col-inner ">
+										<div>
+											<div class="ves-widget widget-images block hlearning-image  ">
+												<div class="widget-inner block-content clearfix">
+													<?php if ($image = $post->getFeaturedImage()): ?>											
+														<div class="image-item">
+															<span class="img-animation"><img src="<?php echo $image->getFullSizeImage() ?>" src="<?php echo $this->escapeHtml($post->getPostTitle()) ?>" class="img-responsive  center-block " ></span>
+														</div>
+													<?php endif; ?>                                        										
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class=" col-lg-6 col-md-4 col-sm-6 col-xs-12 lc-summary t-right ">
+									<div class="col-inner ">
+										<div>
+											<h3 class="w_heading hlearning-title"><?php echo $this->escapeHtml($post->getPostTitle()) ?>		
+											</h3>
+										</div>
+										<div>
+											<div class="ves-widget widget-contenthtml block hlearning-text">
+												<div id="widget-contenthtml13109410531522225278" class="widget-inner block-content ">
+												<?php $conte = strip_tags($post->getPostExcerpt()); ?>
+												
+														<p><?php if (($content = trim($conte)) !== ''): ?>
+													<?php 
+													$string = $content;
+													$token = strtok($string, " "); // we assume that words are separated by sapce or tab
+															$i = 0;
+															$first20Words = '';
+															while ($token !== false && $i < 35) {
+																$first20Words .= ' '.$token;
+																$token = strtok(" ");
+																$i++;
+															}
+															echo $first20Words;
+													?>
+													<?php  $content ?>
+												<?php endif; ?></p>
+												</div>
+											</div>
+										</div>
+										<div>
+											<div class="ves-widget widget-button block hlearning-btn ">
+												<div class="widget-inner block-content">
+													<a target="_blank" href="<?php echo $post->getUrl() ?>" class="btn btn-default btn btn-primary btn-lg " title="LEARN MORE">
+														<i class="fa fa-chevron-right"></i> LEARN MORE			</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>               
+						</div>		
+
+    </div>
+        </div>
+    </div>
+</div>
+						
+        <?php } else { ?>
+		
+		<div class="ves-container   ">
+
+    <div>
+
+        <div class="ves-inner   ">
+
+            <div class="row row-level-2  ">
+		<div class="row-inner clearfix ">
+								<div class=" col-lg-6 col-md-4 col-sm-6 col-xs-12 i-right">
+									<div class="col-inner ">
+										<div>
+											<div class="ves-widget widget-images block hlearning-image">
+												<div class="widget-inner block-content clearfix">
+													<?php if ($image = $post->getFeaturedImage()): ?>											
+														<div class="image-item">
+															<span class="img-animation"><img src="<?php echo $image->getFullSizeImage() ?>" src="<?php echo $this->escapeHtml($post->getPostTitle()) ?>" class="img-responsive  center-block " ></span>
+														</div>
+													<?php endif; ?>                                        										
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class=" col-lg-6 col-md-4 col-sm-6 col-xs-12 lc-summary">
+									<div class="col-inner ">
+										<div>
+											<h3 class="w_heading hlearning-title"><?php echo $this->escapeHtml($post->getPostTitle()) ?>		
+											</h3>
+										</div>
+										<div>
+											<div class="ves-widget widget-contenthtml block hlearning-text">
+												<div id="widget-contenthtml13109410531522225278" class="widget-inner block-content ">
+													<?php $conte = strip_tags($post->getPostExcerpt()); ?>												
+														<p><?php if (($content = trim($conte)) !== ''): ?>
+													<?php 
+													$string = $content;
+													$token = strtok($string, " "); // we assume that words are separated by sapce or tab
+															$i = 0;
+															$first20Words = '';
+															while ($token !== false && $i < 35) {
+																$first20Words .= ' '.$token;
+																$token = strtok(" ");
+																$i++;
+															}
+															echo $first20Words;
+													?>
+													<?php  $content ?>
+												
+												<?php endif; ?></p>
+												</div>
+											</div>
+										</div>
+										<div>
+											<div class="ves-widget widget-button block hlearning-btn ">
+												<div class="widget-inner block-content">
+													<a target="_blank" href="<?php echo $post->getUrl() ?>" class="btn btn-default btn btn-primary btn-lg " title="LEARN MORE">
+														<i class="fa fa-chevron-right"></i> LEARN MORE			</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>               
+						</div>
+						
+						    </div>
+        </div>
+    </div>
+</div>
+		<?php } ?>						
+        <?php $m = $m+1; ?>						
+		<?php endforeach; ?>	
+<?php endif; ?>
+        

@@ -1,0 +1,8 @@
+<div>Category</div>
+<?php 
+$categories = $block->getCategories();
+foreach ( $categories as $category ) :
+echo "<span>".$category->getName()."</span><br/>";
+echo $block->getChildCategoryView($category);
+endforeach;
+?>

@@ -1,0 +1,140 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$cd = $storeManager->getStore()->getWebsiteId();
+$surl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<div class="footer-connect-container">
+    <h4>Connect</h4>
+    <div class="footer-social">
+        <a href="https://www.facebook.com/AlogicCorp/" target="_blank" title="Facebook"><img src="<?php if($cd == 2){ echo $surl.'images/blue/icon-fb.png'; }else{ echo $surl.'images/icon-fb.png'; }  ?>" height="auto" width="auto" alt=""></a>
+        <a href="https://twitter.com/AlogicCorp" target="_blank" title="Twitter"><img src="<?php if($cd == 2){ echo $surl.'images/blue/icon-twitter.png'; }else{ echo $surl.'images/icon-twitter.png'; }  ?>" height="auto" width="auto" alt=""></a>
+        <a href="https://www.instagram.com/alogiccorp/" target="_blank" title="Instgram"><img src="<?php if($cd == 2){ echo $surl.'images/blue/instagram-blue.png'; }else{ echo $surl.'images/instagram.png'; }  ?>" height="auto" width="auto" alt=""></a>
+        <a href="https://www.linkedin.com/company/10692243/" target="_blank" title="Linkedin"><img src="<?php if($cd == 2){ echo $surl.'images/blue/linkedin-blue.png'; }else{ echo $surl.'images/linkedin.png'; }  ?>" height="auto" width="auto" alt=""></a>
+    </div>
+    <div class="footer-newslatter">
+        <span id="ShowNews">Sign up for the latest news through Email</span>
+		
+
+    </div>
+</div>
+<link  rel="stylesheet" type="text/css"  media="all" href="<?php echo  $block->getUrl().'pub/media/mpopup/style.css'; ?>" />
+<div id="popup-container" class="news-pop">
+    <a class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
+    <div id="popup-window">
+        <div class="modal-content">
+
+            <div class="wdpu-head">
+                <div class="wdpu-title"> Sign up today & receive 10% off your first order</div>
+                <?php  $this->getLayout()->createBlock("Magento\Newsletter\Block\Subscribe")->setTemplate("Magento_Newsletter::subscribe.phtml")->toHtml(); ?>
+				<!-- Begin Mailchimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://alogic.us17.list-manage.com/subscribe/post?u=609cdaa7f4104f6e279ce1081&amp;id=24ba264cf5" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	
+
+<div class="mc-field-group">
+	<label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+</label>
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+</div>
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$code = $storeManager->getStore()->getCode(); 
+ $country = 'Australia';
+if($code == 'default') {
+	$country = 'Australia';
+} else if ($code == 'gerdeu') { 
+    $country = 'Germany';
+} else if ($code == 'alogic_business_aus_eng') { 
+    $country = 'Australia';
+} else if ($code == 'fraeng') { 
+    $country = 'France';
+} else if ($code == 'deubeng') { 
+    $country = 'Germany';
+} else if ($code == 'hkgb') { 
+    $country = 'Hongkong';
+} else if ($code == 'indeng') { 
+    $country = 'India';
+} else if ($code == 'business_ireng') { 
+    $country = 'Ireland';
+} else if ($code == 'nzeng') { 
+    $country = 'New Zeeland';
+} else if ($code == 'sgpeng') { 
+    $country = 'Singapore';
+} else if ($code == 'business_ukeng') { 
+    $country = 'UK';
+} else if ($code == 'eng') { 
+    $country = 'USA';
+} else if ($code == 'frabeng') { 
+    $country = 'France';
+} else if ($code == 'hkgm') { 
+    $country = 'Hongkong';
+} else if ($code == 'mindeng') { 
+    $country = 'India';
+} else if ($code == 'ireng') { 
+    $country = 'Ireland';
+} else if ($code == 'mnzeng') { 
+    $country = 'New Zeeland';
+} else if ($code == 'sgpbeng') { 
+    $country = 'Singapore Alogic';
+} else if ($code == 'ukeng') { 
+    $country = 'Singapore';
+} else if ($code == 'us_eng') { 
+    $country = 'USA';
+} else {
+    $country = 'Australia';
+}
+
+
+		?>
+<div class="mc-field-group" style="display:none;">
+	<label for="mce-MMERGE5">Country </label>
+	<input type="text" value="<?php  echo $country; ?>" name="MMERGE5" class="" id="mce-MMERGE5">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_609cdaa7f4104f6e279ce1081_8e076a6c42" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[0]='EMAIL';ftypes[0]='email';fnames[3]='MMERGE5';ftypes[3]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+<!--End mc_embed_signup-->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    jQuery(document).ready(function() {
+
+        jQuery('.news-pop a.close').click(function(){
+            jQuery('.news-pop').fadeOut();
+            jQuery('#active-popup').fadeOut();
+            jQuery('body').removeClass('mpopup');
+            jQuery('#active-popup').remove();
+        });
+
+
+        jQuery('#ShowNews').click(function(){
+
+            var pageHeight = jQuery(document).height();
+            jQuery('<div id="active-popup"></div>').insertBefore('body');
+            jQuery('#active-popup').css("height", pageHeight);
+            jQuery('.news-pop').show();
+            jQuery('body').addClass('mpopup');
+
+
+        });
+    });
+</script>

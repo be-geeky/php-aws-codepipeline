@@ -1,0 +1,26 @@
+<?php
+if ($block->isElasticsearch()) :
+    $_categories = $block->getCategoryCollection();
+    ?>
+    <?php if ($_categories && $_categories->count()): ?>
+        <div class="block block-compare">
+            <div class="block-title">
+                <strong><?php echo __('Category Results') ?></strong>
+                <span class="counter"><?php echo __('%1', $_categories->count()) ?></span>
+            </div>
+            <div class="block-content">
+                <ul>
+                    <?php foreach ($_categories as $_category): /** @var \Magento\Catalog\Model\Category $_category */ ?>
+                        <li>
+                            <a href="<?php echo $block->escapeUrl($_category->getUrl()) ?>"
+                               title="<?php echo $block->escapeHtml($_category->getName()) ?>">
+                                   <?php echo $block->escapeHtml($block->getCategoryPathName($_category)) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    <?php
+    endif;
+endif;

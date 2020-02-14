@@ -1,0 +1,37 @@
+<?php $_product = $block->getProduct() ?>
+<div class="product info detailed">
+	<div class="product-tab-titels">
+		<div class="product-tab-titel"><a href="#product-tab-data-overview">Overview</a></div>
+		<div class="product-tab-titel"><a href="#product-tab-data-specification">Specification</a></div>
+		<div class="product-tab-titel"><a href="#product-tab-data-connection-guides">Connection Guides</a></div>		
+		<div class="product-tab-titel"><a href="#product-tab-data-downloads">Downloads</a></div>
+	</div>
+	<div class="product-tab-info-detail">		
+		<div id="product-tab-data-overview" class="product-tab-data product-overview">
+			<h3>Overview</h3>
+			<?php echo $_product->getDescription(); ?>
+		</div>		
+		<div id="product-tab-data-specification" class="product-tab-data specification">
+			<h3>Specification</h3>
+			<div class="part_no_main speci-row"><span class="part_no speci-que">Part No.</span><span class="part_no_value speci-ans"><?php echo $_product->getSku(); ?></span></div>
+			<div class="user_interface_main speci-row"><span class="user_interface speci-que">User Interface:</span><span class="user_interface_value speci-ans"><?php echo $_product->getUserInterface(); ?></span></div>
+			<div class="power_main speci-row"><span class="power speci-que">Power:</span><span class="power_value speci-ans"><?php echo $_product->getPower(); ?></span></div>
+			<div class="data_rate_main speci-row"><span class="data_rate speci-que">Data Rate:</span><span class="data_rate_value speci-ans"><?php echo $_product->getDataRate(); ?></span></div>
+			<div class="compliance_main speci-row"><span class="compliance speci-que">Compliance:</span><span class="compliance_value speci-ans"><?php echo $_product->getCompliance(); ?></span></div>
+			<div class="physical_characteristics_main speci-row"><span class="physical_characteristics speci-que">Physical Characteristics:</span><span class="physical_characteristics_value speci-ans"><?php echo $_product->getPhysicalCharacteristics(); ?></span></div>
+			<div class="system_requirement_main speci-row"><span class="system_requirement speci-que">System Requirement:</span><span class="system_requirement_value speci-ans"><?php echo $_product->getSystemRequirement(); ?></span></div>
+		</div>
+		<div id="product-tab-data-connection-guides" class="product-tab-data product-connection-guides">
+			<h3>Connection Guides</h3>
+			<img src="<?php echo $this->getUrl('pub/media')."alogic/connectio-guide.jpg"; ?>" alt="" />
+		</div>
+		<div id="product-tab-data-downloads" class="product-tab-data product-downloads">
+			<?php echo $this->getLayout()->createBlock("MageWorx\Downloads\Block\Catalog\Product\Attachments")->setTemplate("MageWorx_Downloads::catalog/product/attachment_container.phtml")->toHtml(); ?>
+		</div>
+	</div>
+</div>
+<script>
+jQuery(".product-tab-titels div").click(function() {
+	jQuery(this).toggleClass('active');
+});
+</script>

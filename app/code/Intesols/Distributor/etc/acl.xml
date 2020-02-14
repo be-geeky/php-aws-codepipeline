@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+   <acl>
+      <resources>
+         <resource id="Magento_Backend::admin">
+            <resource id="Magento_Backend::form_elements" title="Intesols Distributor">
+               <resource id="Intesols_Distributor::distributor_manager" title="Intesols Extension" sortOrder="11">
+                  <resource id="Intesols_Distributor::add_row" title="Reseller and Distributor Manager" sortOrder="20" />
+               </resource>
+            </resource>
+            <resource id="Magento_Backend::stores">
+               <resource id="Magento_Backend::stores_settings">
+                  <resource id="Magento_Config::config">
+                     <resource id="Intesols_Distributor::intesols_distributor_config" title="Intesols Distributor Section" />
+                  </resource>
+               </resource>
+            </resource>
+         </resource>
+      </resources>
+   </acl>
+</config>

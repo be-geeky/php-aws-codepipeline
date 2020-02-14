@@ -1,0 +1,28 @@
+<?php $_product = $block->getProduct() ?>
+<?php	
+	$attribute_string = $_product->getResource()->getAttribute('device_compatibility')->getFrontend()->getValue($_product);	
+	$values = array_map('trim', explode(',', $attribute_string));	
+	?>	
+	<?php if(count($values) && $attribute_string !='') {?>
+<div style ="width: 45%;clear: left;margin-bottom: 14px;">
+	<span style="font-family: 'proxima_novabold'">Compatibility </span>
+		<div style="margin-top:3px">
+			<?php 
+				if(in_array('Apple', $values)){
+			?>
+			<img src="<?php echo  $block->getUrl().'pub/media/compatibility_icons/1.png'; ?>" alt="Apple" />
+			<?php  }?>
+			<?php 
+				if(in_array('Chromebook', $values)){
+			?>
+			<img src="<?php echo  $block->getUrl().'pub/media/compatibility_icons/2.png'; ?>" alt="Chromebook" />
+			<?php  }?>
+			<?php 
+				if(in_array('Microsoft', $values)){
+			?>
+			<img  src="<?php echo  $block->getUrl().'pub/media/compatibility_icons/3.png'; ?>" alt="Microsoft" />
+			<?php  }?>			
+		</div>
+</div>
+<div class="clear"></div>
+<?php } ?>

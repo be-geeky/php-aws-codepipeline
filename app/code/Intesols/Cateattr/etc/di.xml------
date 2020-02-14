@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<type name="Intesols\Cateattr\Controller\Adminhtml\Category\Image\Upload">
+    <arguments>
+        <argument name="imageUploader" xsi:type="object">Magento\Catalog\CategoryImageUpload</argument>
+    </arguments>
+</type>

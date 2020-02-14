@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+	<referenceContainer name="content">
+        
+		<!--<move element="product.info.sku" destination="product.info.main" after="page.main.title"/>-->
+		<move element="product.info.overview" destination="product.info.main" after="product.info.sku"/>        
+        <move element="product.info.review" destination="product.info.main" after="page.main.title"/>	
+        <move element="product.info.barcode" destination="product.info.main" before="page.main.title"/>	
+		
+			<!--<referenceContainer name="product.info.main">
+				<block class="\Magento\Framework\View\Element\Template" name="product.info.barcode" template="product/view/barcode.phtml" after="product.info.sku"/>
+				
+			</referenceContainer>-->
+			<!--block class="\Magento\Catalog\Block\Product\View\Attributes" name="product.reseller.distributer" template="product/view/rd.phtml" after="product.info.media"/>
+
+			<block class="\Magento\Catalog\Block\Product\View\Attributes" name="product.reseller.distributer.new" template="product/view/rdNew.phtml" after="product.reseller.distributer"/-->	
+			
+			
+	<container name="product.info.media" htmlTag="div" htmlClass="product media" after="product.info.main">
+                <block class="Magento\Catalog\Block\Product\View\Gallery" name="product.info.media.image" template="product/view/gallery.phtml"/>
+                <block class="Magento\ProductVideo\Block\Product\View\Gallery" name="product.info.media.video" after="product.info.media.image" template="product/view/gallery.phtml"/>
+</container>
+	
+	</referenceContainer>
+	
+    <referenceContainer name="product.info.main" >
+	
+	         <container name="firstsection-content-view" as="firstsection-content-view" label="Firstsection Content" htmlTag="div" htmlClass="firstSectionProd" before="-">
+			  <block class="Magento\Catalog\Block\Product\View" htmlTag="div" name="product.info.title" template="product/view/title.phtml" before="-" />
+			 
+			</container>
+			<container name="product-content-compatibility" as="product-content-compatibility" label="Product Content Compatibility" htmlTag="div" htmlClass="product-content-compatibility">
+				<block class="Magento\Catalog\Block\Product\View" name="product.info.compatibility" template="product/view/compatibility.phtml"  />
+			</container>
+		    <container name="custom-content-view" as="custom-content-view" label="Page Custom Content" htmlTag="div" htmlClass="custom-content-view" />
+			 
+	</referenceContainer>
+	
+	    <move element="product.info.price" destination="custom-content-view" before="-"/>
+		<move element="firebear.tier.prices.container" destination="custom-content-view" after="product.info.price"/>
+		<move element="product.info" destination="custom-content-view" after="product.info"/>
+	    <move element="page.main.title" destination="firstsection-content-view" before="-"/>  
+		<move element="product.info.sku" destination="firstsection-content-view" /> 
+		<referenceBlock name="product.attributes" remove="true"/>
+		<referenceBlock name="product.info.social" remove="true"/> 
+		<referenceBlock name="product.info.overview" remove="true"/>
+    </body>
+</page>

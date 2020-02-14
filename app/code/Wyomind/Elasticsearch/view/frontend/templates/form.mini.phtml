@@ -1,0 +1,249 @@
+<?php
+/**
+ * @codingStandardsIgnoreFile
+ *
+ * @var \Magento\Framework\View\TemplateEngine\Php $this
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Search\Helper\Data $helper
+ * @var \Wyomind\Elasticsearch\Helper\Data $wyoHelper
+ * @var \Wyomind\Elasticsearch\Helper\Tax $taxHelper
+ * @var \Wyomind\Elasticsearch\Helper\Autocomplete $autocompleteHelper
+ */
+$autocompleteHelper = $this->helper('Wyomind\Elasticsearch\Helper\Autocomplete');
+$wyoHelper = $this->helper('Wyomind\Elasticsearch\Helper\Data');
+$taxHelper = $this->helper('Wyomind\Elasticsearch\Helper\Tax');
+$helper = $this->helper('Magento\Search\Helper\Data');
+
+$isElasticsearch = $wyoHelper->isElasticsearch();
+
+if ($isElasticsearch) {
+    $autocompleteUrl = $wyoHelper->getAutocompleteUrl();
+    $jsComponent = "wyoSearch";
+} else {
+    $autocompleteUrl = $helper->getSuggestUrl();
+    $jsComponent = "quickSearch";
+}
+?>
+
+
+
+<?php if ($autocompleteHelper->isInfortisUltimo()) : ?>
+    <?php
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // INFORTIS/ULTIMO
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ?>
+    <?php
+    $theme = $this->helper('Infortis\Base\Helper\Data');
+
+    $searchClasses = '';
+    $mode = $theme->getCfgDesign('search/mode');
+    if ($mode === 'e') {
+        $searchClasses .= ' expanding';
+    }
+
+    $searchSize = $theme->getCfgDesign('search/size');
+    if (!empty($searchSize)) {
+        $searchClasses .= ' size-' . $searchSize;
+    }
+    ?>
+    <div id="header-search" class="skip-content skip-content--style">
+        <div id="block-search" class="block block-search search-wrapper<?php echo $searchClasses; ?>"> <?php /* @deprecated class "search-wrapper" */ ?>
+            <div class="block block-title"><strong><?php /* @escapeNotVerified */ echo __('Search'); ?></strong></div>
+            <div class="block block-content">
+                <form class="form minisearch" id="search_mini_form" action="<?php /* @escapeNotVerified */ echo $helper->getResultUrl() ?>" method="get">
+                    <div class="field search">
+                        <?php /* <label class="label" for="search" data-role="minisearch-label">
+                          <span><?php echo __('Search'); ?></span>
+                          </label> */ ?>
+                        <div class="control">
+                            <input id="search"
+                                   data-mage-init='{"<?php echo $jsComponent; ?>":{
+                                   "formSelector":"#search_mini_form",
+                                   "url":"<?php /* @escapeNotVerified */ echo $wyoHelper->getAutocompleteUrl(); ?>",
+                                   "destinationSelector":"#search_autocomplete"}
+                                   }'
+                                   type="text"
+                                   name="<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>"
+                                   value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>"
+                                   placeholder="<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>"
+                                   class="input-text"
+                                   maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength(); ?>"
+                                   role="combobox"
+                                   aria-haspopup="false"
+                                   aria-autocomplete="both"
+                                   autocomplete="off"/>
+                            <div id="search_autocomplete" class="search-autocomplete"></div>
+                            <?php echo $block->getChildHtml() ?>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button id="action-search" type="submit"
+                                title="<?php echo $block->escapeHtml(__('Search')) ?>"
+                                class="action search">
+                            <span class="icon ic ic-search ib ib-square ib-hover"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- end: block-search -->
+        <?php if ($mode === 'e'): ?>
+            <script type="text/javascript">
+                //<![CDATA[
+                requirejs(['jquery', 'expandingsearch'], function (jQuery, expandingsearch) {
+                    jQuery(function ($) {
+                        $('#block-search').expandingsearch();
+                    });
+                }); //end: requirejs
+                //]]>
+            </script>
+        <?php endif; ?>
+    </div>
+
+
+
+<?php elseif ($autocompleteHelper->isAlothemesMilano()) : ?>
+    <?php
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ALOTHEMES/MILANO (css not natively supported)
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ?>
+    <div class="block-search">
+        <div class="block block-content">
+            <form class="form minisearch form-search" id="search_mini_form" action="<?php /* @escapeNotVerified */ echo $helper->getResultUrl() ?>" method="get">
+                <div class="block-title"><strong><?php /* @escapeNotVerified */ echo __('Search'); ?></strong></div>
+                <button type="submit"
+                        title="<?php echo $block->escapeHtml(__('Search')) ?>"
+                        class="action search button">
+                    <span><span><i class="fs1"  data-icon="U" aria-hidden="true"></i><?php /* @escapeNotVerified */ //echo __('Search');  ?></span></span>
+                </button>
+                <div class="field search">
+                    <div class="control">
+                        <input id="search"
+                               data-mage-init='{"<?php echo $jsComponent; ?>": {
+                               "formSelector": "#search_mini_form",
+                               "url":"<?php /* @escapeNotVerified */ echo $autocompleteUrl; ?>",
+                               "destinationSelector": "#search_autocomplete"
+                               }}'
+                               type="text"
+                               name="<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>"
+                               value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>"
+                               placeholder="<?php /* @escapeNotVerified */ echo __('Search here...'); ?>"
+                               class="input-text"
+                               maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength(); ?>"
+                               role="combobox"
+                               aria-haspopup="false"
+                               aria-autocomplete="both"
+                               autocomplete="off"/>
+                        <div id="search_autocomplete" class="search-autocomplete alothemes-milano"></div>
+                        <?php echo $block->getChildHtml() ?>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<?php else: ?>
+    <?php
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // DEFAULT (LUMA)
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ?>
+    <div class="block block-search">
+        <div class="block block-title"><strong><?php /* @escapeNotVerified */ echo __('Search'); ?></strong></div>
+        <div class="block block-content">
+            <form class="form minisearch" id="search_mini_form" action="<?php /* @escapeNotVerified */ echo $helper->getResultUrl() ?>" method="get">
+                <div class="field search">
+                    <label class="label" for="search" data-role="minisearch-label">
+                        <span><?php /* @escapeNotVerified */ echo __('Search'); ?></span>
+                    </label>
+                    <div class="control">
+                        <input id="search"
+                               data-mage-init='{"<?php echo $jsComponent; ?>": {
+                               "formSelector": "#search_mini_form",
+                               "url":"<?php /* @escapeNotVerified */ echo $autocompleteUrl ?>",
+                               "destinationSelector": "#search_autocomplete"
+                               }}'
+                               type="text"
+                               name="<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>"
+                               value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>"
+                               placeholder="<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>"
+                               class="input-text"
+                               maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength(); ?>"
+                               role="combobox"
+                               aria-haspopup="false"
+                               aria-autocomplete="both"
+                               autocomplete="off"/>
+                        <div id="search_autocomplete" class="search-autocomplete"></div>
+                        <?php echo $block->getChildHtml() ?>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="submit"
+                            title="<?php echo $block->escapeHtml(__('Search')) ?>"
+                            class="action search">
+                        <span><?php /* @escapeNotVerified */ echo __('Search'); ?></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+<?php
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// COMMON
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+?>
+<?php if ($isElasticsearch) : ?>
+<script>
+    require(['underscore', 'Magento_Catalog/js/price-utils'], function (_, utils) {
+        _.mixin({
+            getBaseUrl: function () {
+                return '<?php echo $block->getBaseUrl() ?>';
+            },
+            getSearchUrl: function () {
+                return '<?php echo $helper->getResultUrl(); ?>';
+            },
+            getFormattedPrice: function (price, productTaxClassId) {
+                return _.formatPrice(_.calculateTax(_.convertPrice(price), productTaxClassId));
+            },
+            formatPrice: function (price) {
+                var priceFormat = <?php /* @escapeNotVerified */ echo $this->helper('Magento\Tax\Helper\Data')->getPriceFormat($block->getStore()); ?>;
+
+                return utils.formatPrice(price, priceFormat);
+            },
+            calculateTax: function (price, productTaxClassId) {
+                var needPriceConversion = <?php echo $taxHelper->needPriceConversion() ? 'true' : 'false' ?>;
+                var taxRates = <?php /* @escapeNotVerified */ echo json_encode($taxHelper->getRates()) ?>;
+
+                if (!needPriceConversion || !taxRates[productTaxClassId]) {
+                    return price;
+                }
+
+                var rate = taxRates[productTaxClassId] / 100;
+                var priceIncludesTax = <?php echo $taxHelper->priceIncludesTax() ? 'true' : 'false' ?>;
+
+                if (priceIncludesTax) {
+                    return price / (1 + rate);
+                }
+
+                return price + price * rate;
+            },
+            convertPrice: function (price) {
+                var rate = <?php echo $wyoHelper->getCurrentCurrencyRate() ?>;
+
+                return price * rate;
+            }
+        });
+    });
+</script>
+
+<style>
+<?php echo $autocompleteHelper->getAutocompleteCssRules() ?>
+</style>
+<script id="wyomind-tmpl-results" type="text/x-magento-template">
+    <?php echo $autocompleteHelper->getAutocompleteJsTemplate() ?>
+</script>
+<?php endif; ?>

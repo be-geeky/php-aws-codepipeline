@@ -1,0 +1,208 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ */
+?>
+<?php
+
+   $objectManager = \Magento\Framework\App\ObjectManager::getInstance();   
+   $current_category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');
+   if($current_category){
+		echo "<h1>".$current_category->getName()."</h1>";
+   }
+   //echo $current_category->getData();
+  // print_r($current_category->getData());
+   //echo "<br/>"."Child :- ";    
+   //var_dump($current_category->getChildren());
+	if($current_category && $current_category->getLevel() == 2 && $current_category->getChildren()):
+	$category_collection = $objectManager->get('\Magento\Catalog\Model\CategoryFactory')->create()->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active', 1)->setOrder('position', 'ASC')->addIdFilter($current_category->getChildren());	
+	foreach($category_collection as $category){
+?>
+	<a class="block-promo sub-cat-list" href="<?php echo $category->getUrl() ?>"> 
+		<img src="<?php echo $category->getImageUrl() ?>" alt="" /> 
+		<span class="content"><strong class="title"><?php echo $category->getName() ?></strong></span> 
+	</a>	
+<?php	
+	}
+	elseif($current_category && $current_category->getLevel() == 3 && $current_category->getChildren()):
+		$category_collection = $objectManager->get('\Magento\Catalog\Model\CategoryFactory')->create()->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active', 1)->setOrder('position', 'ASC')->addIdFilter($current_category->getChildren());	
+		$numofcat = 1;
+		foreach($category_collection as $category){
+			$subcategory_products = $category->getProductCollection()->addAttributeToSelect('*');			
+?>			
+		<div class="subcat-view">
+			<div class="subcat-titel"><h2><?php echo $category->getName() ?></h2></div>
+			<div class="subcat-data">
+				<div class="subcat-des">
+					<div><?php echo $category->getDescription() ?></div>
+					<div><a href="<?php echo $category->getUrl() ?>" title="Shop Now" class="action tocart primary"><span>Shop Now ></span></a></div>
+				</div>
+				<div id="owl-demo-<?php echo $numofcat ?>" class="subcat-pros">
+				<?php $numofpro = 1; ?>
+				<?php foreach($subcategory_products as $subcategory_product): ?>
+					<?php $subCateProductImage = $block->getImage($subcategory_product, 'sub_category_pro');	 ?>
+					<div  class="subcat-pro item">					
+					<a href="<?php /* @escapeNotVerified */ echo $subcategory_product->getProductUrl() ?>" class="product photo product-item-photo" tabindex="-1">
+                        <?php echo $subCateProductImage->toHtml(); ?>
+                    </a>
+                    <div class="product details product-item-details">
+						<div class="cate-pro-name"><?php echo $subcategory_product->getName() ?></div>
+						<div class="cate-pro-des"><span class="cate-pro-attr"></span><a href="<?php /* @escapeNotVerified */ echo $subcategory_product->getProductUrl() ?>"><span class="cate-pro-action">Shop Now ></span></a></div>
+					</div>					
+					</div>
+				<?php if($numofpro == 4){ break;} ?>	
+				<?php $numofpro++; endforeach; ?>
+				</div>
+				<div class="customNavigation">
+				  <a class="btn prev-<?php echo $numofcat ?>"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i></a>
+				  <a class="btn next-<?php echo $numofcat ?>"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+		<script>
+		jQuery(document).ready(function() { 
+			var owl<?php echo $numofcat ?> = jQuery("#owl-demo-<?php echo $numofcat ?>");
+			owl<?php echo $numofcat ?>.owlCarousel({ 
+			  autoPlay: 3000,
+			  items : 3,
+			  itemsDesktop : [1199,3],
+			  itemsDesktopSmall : [979,3]
+
+			});
+			jQuery(".next-<?php echo $numofcat ?>").click(function(){
+				owl<?php echo $numofcat ?>.trigger('owl.next');
+			})
+			jQuery(".prev-<?php echo $numofcat ?>").click(function(){
+				owl<?php echo $numofcat ?>.trigger('owl.prev');
+			})
+		});
+		</script>
+<?php
+		$numofcat++;
+		}
+	else:	
+	
+$_productCollection = $block->getLoadedProductCollection();
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty"><div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div></div>
+<?php else: ?>
+    <?php echo $block->getToolbarHtml() ?>
+    <?php echo $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() == 'grid') {
+        $viewMode = 'grid';
+        $image = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $image = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    $pos = $block->getPositioned();
+    ?>
+    <div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
+        <?php $iterator = 1; ?>
+        <ol class="products list items product-items">
+            <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($_productCollection as $_product): ?>
+                <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
+                <div class="product-item-info" data-container="product-grid">
+                    <?php
+                    $productImage = $block->getImage($_product, $image);
+                    if ($pos != null) {
+                        $position = ' style="left:' . $productImage->getWidth() . 'px;'
+                            . 'top:' . $productImage->getHeight() . 'px;"';
+                    }
+                    ?>
+                    <?php // Product Image ?>
+                    <a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product photo product-item-photo" tabindex="-1">
+                        <?php echo $productImage->toHtml(); ?>
+                    </a>
+                    <div class="product details product-item-details">
+                        <?php
+                            $_productNameStripped = $block->stripTags($_product->getName(), null, true);
+                        ?>
+                        <strong class="product name product-item-name">
+                            <a class="product-item-link"
+                               href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>">
+                                <?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
+                            </a>
+                        </strong>
+                        <?php echo $block->getReviewsSummaryHtml($_product, $templateType); ?>
+                        <?php /* @escapeNotVerified */ echo $block->getProductPrice($_product) ?>
+                        <?php echo $block->getProductDetailsHtml($_product); ?>
+
+                        <div class="product-item-inner">
+                            <div class="product actions product-item-actions"<?php echo strpos($pos, $viewMode . '-actions') ? $position : ''; ?>>
+                                <div class="actions-primary"<?php echo strpos($pos, $viewMode . '-primary') ? $position : ''; ?>>
+                                    <?php if ($_product->isSaleable()): ?>
+                                        <?php $postParams = $block->getAddToCartPostParams($_product); ?>
+                                        <form data-role="tocart-form" action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>" method="post">
+                                            <input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+                                            <input type="hidden" name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>" value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+                                            <?php echo $block->getBlockHtml('formkey')?>
+                                            <button type="submit"
+                                                    title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+                                                    class="action tocart primary">
+                                                <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <?php if ($_product->getIsSalable()): ?>
+                                            <div class="stock available"><span><?php /* @escapeNotVerified */ echo __('In stock') ?></span></div>
+                                        <?php else: ?>
+                                            <div class="stock unavailable"><span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span></div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                                <div data-role="add-to-links" class="actions-secondary"<?php echo strpos($pos, $viewMode . '-secondary') ? $position : ''; ?>>
+                                    <?php if ($addToBlock = $block->getChildBlock('addto')): ?>
+                                        <?php echo $addToBlock->setProduct($_product)->getChildHtml(); ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php if ($showDescription):?>
+                                <div class="product description product-item-description">
+                                    <?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                                    <a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_productNameStripped ?>"
+                                       class="action more"><?php /* @escapeNotVerified */ echo __('Learn More') ?></a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php echo($iterator == count($_productCollection)+1) ? '</li>' : '' ?>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+    <?php echo $block->getToolbarHtml() ?>
+    <?php if (!$block->isRedirectToCartEnabled()) : ?>
+        <script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+        </script>
+    <?php endif; ?>
+<?php endif; ?>
+<?php endif;	?>
